@@ -16,6 +16,10 @@ fastapi = "^0.111.0"
 pydantic = "^2.7.1"
 sqlalchemy = "^2.0.30"
 alembic = "^1.13.1"
+psycopg2-binary = "^2.9.9"
+psycopg = "^3.1.19"
+psycopg-binary = "^3.1.19"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"
@@ -62,11 +66,8 @@ lint.select = [
 "tests/*" = [
   "S101"  # Use of assert detected (used in tests)
 ]
-
-[lint.extend-per-file-ignores]
 "migrations/*" = [
   "INP001", # flake8-no-pep420 - checks for PEP 420 violations
-  "I001" # isort - sorts imports in your project
 ]
 
 [tool.ruff.isort]
