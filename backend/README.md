@@ -1,5 +1,8 @@
 #Invoicer backend
 
+## Running the backend
+- `fastapi dev main.py --reload` [//] run the backend for development (auto-reload)
+
 ## Working with migrations
 - starts with `alembic init migrations` [//] tool - command - folder
 
