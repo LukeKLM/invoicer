@@ -24,3 +24,46 @@ pre-commit = "^3.7.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff] # https://beta.ruff.rs/docs/settings/
+fix = true
+line-length = 88
+lint.select = [
+  "B", # flake8-bugbear - bugs and design problems in your code
+  "C4", # flake8-comprehensions - comprehensions instead of for loops where possible
+  "C90", # mccabe - finds complex code blocks in your project
+  "COM", # flake8-commas - checks for missing trailing commas
+  "DJ", # flake8-django - checks for common Django issues and missing migrations in your project
+  "E", # pycodestyle errors - flake8 default errors (pycodestyle)
+  "EM", # flake8-errmsg - checks for common error messages in your project
+  "F", # pyflakes - flake8 default errors (pyflakes)
+  "I", # isort - sorts imports in your project
+  "INP001", # flake8-no-pep420 - checks for PEP 420 violations
+  "ISC", # flake8-implicit-str-concat - checks for implicit string concatenation
+  "N", # pep8-naming - checks for PEP 8 naming conventions
+  "PERF", # perflint - checks for common performance issues in your project
+  "PIE", # flake8-pie - checks for common Python security issues in your project
+  "PTH", # flake8-use-pathlib - checks for common pathlib issues in your project
+  "RET", # flake8-return - checks for common return issues in your project
+  "RSE", # flake8-raise - checks for common raise issues in your project
+  "RUF", # ruff - checks for common issues in your project
+  "S", # flake8-bandit - checks for common security issues in your project
+  "SIM", # flake8-simplify - checks for simplification opportunities in your project
+  "T10", # flake8-debugger - checks for used breakpoints and debuggers
+  "TCH", # flake8-type-checking - checks for common type checking issues in your project
+  "TID", # flake8-tidy-imports - checks for unused imports in your project
+  "UP", # pyupgrade - checks for common Python upgrade issues in your project
+  "W", # pycodestyle warnings - flake8 default warnings (pycodestyle)
+]
+show-fixes = true
+show-source = true
+target-version = "py311"
+
+[tool.ruff.extend-per-file-ignores]
+"migrations/*" = [
+  "INP001", # flake8-no-pep420 - checks for PEP 420 violations
+  "I001", # isort - sorts imports in your project
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
