@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "invoicer"
 version = "0.1.0"
@@ -20,14 +24,12 @@ mypy = "^1.10.0"
 black = "^24.4.2"
 pre-commit = "^3.7.1"
 
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
 [tool.ruff] # https://beta.ruff.rs/docs/settings/
 fix = true
 line-length = 88
+show-fixes = true
+output-format = "full"
+target-version = "py311"
 lint.select = [
   "B", # flake8-bugbear - bugs and design problems in your code
   "C4", # flake8-comprehensions - comprehensions instead of for loops where possible
@@ -53,17 +55,19 @@ lint.select = [
   "TCH", # flake8-type-checking - checks for common type checking issues in your project
   "TID", # flake8-tidy-imports - checks for unused imports in your project
   "UP", # pyupgrade - checks for common Python upgrade issues in your project
-  "W", # pycodestyle warnings - flake8 default warnings (pycodestyle)
+  "W" # pycodestyle warnings - flake8 default warnings (pycodestyle)
 ]
-show-fixes = true
-show-source = true
-target-version = "py311"
 
 [tool.ruff.extend-per-file-ignores]
-"migrations/*" = [
-  "INP001", # flake8-no-pep420 - checks for PEP 420 violations
-  "I001", # isort - sorts imports in your project
+"tests/*" = [
+  "S101"  # Use of assert detected (used in tests)
 ]
 
-[tool.ruff.lint.isort]
+[lint.extend-per-file-ignores]
+"migrations/*" = [
+  "INP001", # flake8-no-pep420 - checks for PEP 420 violations
+  "I001" # isort - sorts imports in your project
+]
+
+[tool.ruff.isort]
 force-single-line = true
