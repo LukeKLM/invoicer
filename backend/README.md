@@ -13,3 +13,17 @@
 
 ## Pre-commit
 - `pre-commit install` [//] install pre-commit hooks
+
+# Tools used for this project
+- FastAPI
+- SQLAlchemy
+- Alembic
+- Pydantic
+- Pre-commit
+- Docker
+- Docker-compose
+- PostgreSQL
+- Uvicorn
+- Ruff
+- Black
+- Pytest

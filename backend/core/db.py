@@ -1,5 +1,8 @@
 from collections.abc import AsyncGenerator
+from datetime import datetime
 
+from sqlalchemy import Column
+from sqlalchemy import DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -18,3 +21,8 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 
 Base = declarative_base()
+
+
+class BaseModel(Base):
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
