@@ -3,12 +3,12 @@ import uuid
 from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
 
-from api.users.schemas import UserCreate
-from api.users.schemas import UserRead
+from app.models.users import User
+from app.schemas.users import UserCreate
+from app.schemas.users import UserRead
+from app.services.managers import get_user_manager
 from core.config import settings
 from core.security import auth_backend
-from src.users.managers import get_user_manager
-from src.users.models import User
 
 app = FastAPI(
     title=settings.BACKEND_APP_NAME,

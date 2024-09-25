@@ -5,9 +5,9 @@ from fastapi import Depends
 from fastapi_users import BaseUserManager
 from fastapi_users import UUIDIDMixin
 
+from app.models.users import User
+from app.models.users import get_user_db
 from core.config import settings
-from src.users.models import User
-from src.users.models import get_user_db
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):

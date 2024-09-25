@@ -6,9 +6,9 @@ from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy import Integer
 from sqlalchemy import String
 
+from app.enums.invoice_enums import InvoicePaymentType
+from app.enums.invoice_enums import InvoiceState
 from core.db import BaseModel
-from src.invoices.enums import InvoicePaymentType
-from src.invoices.enums import InvoiceState
 
 
 class Invoice(BaseModel):
