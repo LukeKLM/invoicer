@@ -74,6 +74,7 @@ lint.select = [
 ]
 "migrations/*" = [
   "INP001", # flake8-no-pep420 - checks for PEP 420 violations
+  "W291",
 ]
 
 [tool.ruff.isort]
