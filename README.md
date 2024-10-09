@@ -6,4 +6,5 @@
 
 
 ## To continue:
+- remove fastapi-users and use auth service auth0, auth.js etc.
 - run ORM to import invoices
