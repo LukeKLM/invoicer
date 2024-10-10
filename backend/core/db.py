@@ -15,7 +15,7 @@ print(settings.SQLALCHEMY_DATABASE_URI)
 SessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with SessionLocal() as session:
         yield session
 

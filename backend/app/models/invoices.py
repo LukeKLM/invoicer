@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from sqlalchemy import UUID
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import Enum as SQLAlchemyEnum
@@ -23,4 +24,5 @@ class Invoice(BaseModel):
     state = Column(SQLAlchemyEnum(InvoiceState), nullable=False)
     subscriber_id = Column(Integer, nullable=False)
     supplier_id = Column(Integer, nullable=False)
+    user_id = Column(UUID, nullable=False)
     variable_symbol = Column(String(10), nullable=False)

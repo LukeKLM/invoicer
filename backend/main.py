@@ -4,14 +4,16 @@ from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
 
 from app.models.users import User
+from app.routers.invoices import router as invoices_router
 from app.schemas.users import UserCreate
 from app.schemas.users import UserRead
-from app.services.managers import get_user_manager
 from core.config import settings
 from core.security import auth_backend
+from core.security import get_user_manager
 
 app = FastAPI(
     title=settings.BACKEND_APP_NAME,
+    persistAuthorization=True,
 )
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](
@@ -28,3 +30,4 @@ app.include_router(
     prefix="/auth",
     tags=["auth"],
 )
+app.include_router(invoices_router)

@@ -6,5 +6,5 @@
 
 
 ## To continue:
-- remove fastapi-users and use auth service auth0, auth.js etc.
+- CRUD EP`s for invoices
 - run ORM to import invoices
