@@ -13,7 +13,7 @@ from core.security import get_user_manager
 
 app = FastAPI(
     title=settings.BACKEND_APP_NAME,
-    persistAuthorization=True,
+    swagger_ui_parameters={"persistAuthorization": True},
 )
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](

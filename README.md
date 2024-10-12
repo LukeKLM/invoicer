@@ -1,10 +1,11 @@
 # invoicer
 
 ### TODOS:
- - [ ] clean .gitignore from unnecessary files
+ - [ ] Clean .gitignore from unnecessary files
  - [ ] Check timezone issues, utc time vs local time
+ - [ ] Catch errors globally
+ - [ ] Custom user logging (remove fastapi users)
 
 
 ## To continue:
 - CRUD EP`s for invoices
-- run ORM to import invoices

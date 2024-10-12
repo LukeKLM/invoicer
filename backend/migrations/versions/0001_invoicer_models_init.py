@@ -44,9 +44,9 @@ def upgrade() -> None:
     op.create_table(
         "invoice_invoices",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("due_date", sa.DateTime(), nullable=False),
-        sa.Column("expose_date", sa.DateTime(), nullable=True),
-        sa.Column("number", sa.String(length=10), nullable=False),
+        sa.Column("due_date", sa.Date(), nullable=False),
+        sa.Column("expose_date", sa.Date(), nullable=True),
+        sa.Column("invoice_number", sa.String(length=10), nullable=False),
         sa.Column(
             "payment_type",
             sa.Enum("CASH", "BANK_TRANSFER", name="invoicepaymenttype"),
@@ -74,7 +74,7 @@ def upgrade() -> None:
     op.create_index(
         op.f("ix_invoice_invoices_number"),
         "invoice_invoices",
-        ["number"],
+        ["invoice_number"],
         unique=False,
     )
     op.create_table(

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import UUID
 from sqlalchemy import Column
-from sqlalchemy import DateTime
+from sqlalchemy import Date
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy import Integer
 from sqlalchemy import String
@@ -17,9 +17,9 @@ class Invoice(BaseModel):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    due_date = Column(DateTime, nullable=False)
-    expose_date = Column(DateTime, default=datetime.now)
-    number = Column(String(10), index=True, nullable=False)
+    due_date = Column(Date, nullable=False)
+    expose_date = Column(Date, default=datetime.now)
+    invoice_number = Column(String(10), index=True, nullable=False)
     payment_type = Column(SQLAlchemyEnum(InvoicePaymentType), nullable=False)
     state = Column(SQLAlchemyEnum(InvoiceState), nullable=False)
     subscriber_id = Column(Integer, nullable=False)
