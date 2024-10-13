@@ -19,6 +19,18 @@ class InvoiceCreate(BaseModel):
     variable_symbol: str = Field(max_length=10)
 
 
+class InvoiceUpdate(BaseModel):
+    due_date: date | None = None
+    expose_date: date | None = None
+
+    invoice_number: str | None = Field(max_length=10, default=None)
+    payment_type: InvoicePaymentType | None = None
+    state: InvoiceState | None = None
+    subscriber_id: int | None = None
+    supplier_id: int | None = None
+    variable_symbol: str | None = Field(max_length=10, default=None)
+
+
 class InvoiceRetrieve(InvoiceCreate):
     id: int
 

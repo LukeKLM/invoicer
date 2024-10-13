@@ -3,6 +3,7 @@ from fastapi import Depends
 
 from app.models.users import User
 from app.schemas.invoices import InvoiceCreate
+from app.schemas.invoices import InvoiceUpdate
 from app.services.api.invoices import InvoiceApiService
 from core.db import SessionLocal
 from core.db import get_session
@@ -38,3 +39,13 @@ async def create_invoice(
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceApiService(user, session).create_invoice(invoice)
+
+
+@router.patch("/{invoice_id}")
+async def update_invoice(
+    invoice_id: int,
+    invoice: InvoiceUpdate,
+    user: User = Depends(current_active_user),
+    session: SessionLocal = Depends(get_session),
+):
+    return await InvoiceApiService(user, session).update_invoice(invoice_id, invoice)

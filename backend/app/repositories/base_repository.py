@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from sqlalchemy import Select
 from sqlalchemy import insert
 from sqlalchemy import select
+from sqlalchemy import update
 
 from app.models.users import User
 from core.db import SessionLocal
@@ -38,6 +39,21 @@ class BaseRepository:
         new_record = result.scalars().first()
         self.db_session.commit()
         return new_record
+
+    async def update(self, id: int, data: BaseModel):
+        data = data.model_dump(exclude_none=True)
+
+        query = (
+            update(self.model)
+            .where(self.model.id == id)
+            .values(data)
+            .returning(self.model)
+        )
+        result = await self.db_session.execute(query)
+
+        updated_record = result.scalars().first()
+        self.db_session.commit()
+        return updated_record
 
 
 class BaseRepositoryWithUser(BaseRepository):
