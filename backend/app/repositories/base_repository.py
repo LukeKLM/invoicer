@@ -28,7 +28,7 @@ class BaseRepository:
         return self._base_query(delete(self.model))
 
     def _insert(self) -> Insert:
-        return self._base_query(insert(self.model))
+        return insert(self.model)
 
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query
@@ -55,8 +55,13 @@ class BaseRepository:
         result = await self.db_session.execute(query)
 
         new_record = result.scalars().first()
-        self.db_session.commit()
-        return new_record
+        if new_record:
+            await self.db_session.commit()
+            await self.db_session.refresh(new_record)
+
+            return new_record
+
+        return None
 
     async def update(self, object_id: int, data: BaseModel):
         data = data.model_dump(exclude_none=True)
@@ -70,9 +75,14 @@ class BaseRepository:
         result = await self.db_session.execute(query)
 
         updated_record = result.scalars().first()
-        self.db_session.commit()
-        # todo: FIX THIS.. IT IS NEVER COMMITED TO DB
-        return updated_record
+
+        if updated_record:
+            await self.db_session.commit()
+            await self.db_session.refresh(updated_record)
+
+            return updated_record
+
+        return None
 
     async def delete(self, object_id: int):
         query = self._delete().where(self.model.id == object_id)

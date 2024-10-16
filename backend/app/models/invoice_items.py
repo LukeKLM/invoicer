@@ -1,3 +1,4 @@
+from sqlalchemy import UUID
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import Numeric
@@ -14,3 +15,4 @@ class InvoiceItem(BaseModel):
     price = Column(Numeric(precision=10, scale=2), nullable=False)
     title = Column(String(64), nullable=False)
     quantity = Column(Integer, nullable=False, default=1)
+    user_id = Column(UUID, nullable=False)

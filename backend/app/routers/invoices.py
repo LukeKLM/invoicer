@@ -20,7 +20,7 @@ async def get_invoices(
     user: User = Depends(current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
-    return await InvoiceApiService(user, session).get_invoices()
+    return await InvoiceApiService(user, session).get_list()
 
 
 @router.get("/{invoice_id}")
@@ -29,7 +29,7 @@ async def get_invoice(
     user: User = Depends(current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
-    return await InvoiceApiService(user, session).get_invoice(invoice_id)
+    return await InvoiceApiService(user, session).get_detail(invoice_id)
 
 
 @router.post("/")
@@ -38,7 +38,7 @@ async def create_invoice(
     user: User = Depends(current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
-    return await InvoiceApiService(user, session).create_invoice(invoice)
+    return await InvoiceApiService(user, session).create(invoice)
 
 
 @router.patch("/{invoice_id}")
@@ -48,7 +48,7 @@ async def update_invoice(
     user: User = Depends(current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
-    return await InvoiceApiService(user, session).update_invoice(invoice_id, invoice)
+    return await InvoiceApiService(user, session).update(invoice_id, invoice)
 
 
 @router.delete("/{invoice_id}")
@@ -57,4 +57,4 @@ async def delete_invoice(
     user: User = Depends(current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
-    return await InvoiceApiService(user, session).delete_invoice(invoice_id)
+    return await InvoiceApiService(user, session).delete(invoice_id)
