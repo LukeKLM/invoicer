@@ -1,5 +1,9 @@
 from pydantic import BaseModel
+from sqlalchemy import Delete
+from sqlalchemy import Insert
 from sqlalchemy import Select
+from sqlalchemy import Update
+from sqlalchemy import delete
 from sqlalchemy import insert
 from sqlalchemy import select
 from sqlalchemy import update
@@ -14,38 +18,52 @@ class BaseRepository:
         self.db_session = db_session
         self.model = None
 
-    def _base_query(self) -> Select:
-        return select(self.model)
+    def _select(self) -> Select:
+        return self._base_query(select(self.model))
 
-    async def get_list(self):
-        list = await self.db_session.execute(self._base_query())
-        return list.scalars().all()
+    def _update(self) -> Update:
+        return self._base_query(update(self.model))
 
-    async def get_detail(self, id: int):
-        detail = await self.db_session.execute(
-            self._base_query().where(self.model.id == id),
-        )
-        return detail.scalars().first()
+    def _delete(self) -> Delete:
+        return self._base_query(delete(self.model))
+
+    def _insert(self) -> Insert:
+        return self._base_query(insert(self.model))
+
+    def _base_query(self, query) -> Select | Insert | Update | Delete:
+        return query
 
     def _get_data_for_create(self, data: BaseModel):
         return data.model_dump()
 
+    async def get_list(self):
+        query = self._select()
+
+        list = await self.db_session.execute(query)
+        return list.scalars().all()
+
+    async def get_detail(self, object_id: int):
+        detail = await self.db_session.execute(
+            self._select().where(self.model.id == object_id),
+        )
+        return detail.scalars().first()
+
     async def create(self, data: BaseModel):
         data = self._get_data_for_create(data)
 
-        query = insert(self.model).values(data).returning(self.model)
+        query = self._insert().values(data).returning(self.model)
         result = await self.db_session.execute(query)
 
         new_record = result.scalars().first()
         self.db_session.commit()
         return new_record
 
-    async def update(self, id: int, data: BaseModel):
+    async def update(self, object_id: int, data: BaseModel):
         data = data.model_dump(exclude_none=True)
 
         query = (
-            update(self.model)
-            .where(self.model.id == id)
+            self._update()
+            .where(self.model.id == object_id)
             .values(data)
             .returning(self.model)
         )
@@ -53,12 +71,18 @@ class BaseRepository:
 
         updated_record = result.scalars().first()
         self.db_session.commit()
+        # todo: FIX THIS.. IT IS NEVER COMMITED TO DB
         return updated_record
+
+    async def delete(self, object_id: int):
+        query = self._delete().where(self.model.id == object_id)
+        await self.db_session.execute(query)
+        self.db_session.commit()
 
 
 class BaseRepositoryWithUser(BaseRepository):
-    def _base_query(self):
-        return select(self.model).where(self.model.user_id == self.user.id)
+    def _base_query(self, query) -> Select | Insert | Update | Delete:
+        return query.where(self.model.user_id == self.user.id)
 
     def _get_data_for_create(self, data: BaseModel):
         return {

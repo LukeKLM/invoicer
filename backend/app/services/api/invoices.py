@@ -1,3 +1,5 @@
+from sqlalchemy.exc import NoResultFound
+
 from app.models.users import User
 from app.repositories.invoices import InvoiceRepository
 from app.schemas.invoices import InvoiceCreate
@@ -25,3 +27,9 @@ class InvoiceApiService(BaseApiService):
     async def update_invoice(self, invoice_id: int, invoice: InvoiceUpdate):
         invoice = await self.repository.update(invoice_id, invoice)
         return InvoiceRetrieve(**invoice.__dict__)
+
+    async def delete_invoice(self, invoice_id: int):
+        try:
+            return await self.repository.delete(invoice_id)
+        except NoResultFound:
+            return None

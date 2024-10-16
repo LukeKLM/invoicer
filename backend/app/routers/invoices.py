@@ -49,3 +49,12 @@ async def update_invoice(
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceApiService(user, session).update_invoice(invoice_id, invoice)
+
+
+@router.delete("/{invoice_id}")
+async def delete_invoice(
+    invoice_id: int,
+    user: User = Depends(current_active_user),
+    session: SessionLocal = Depends(get_session),
+):
+    return await InvoiceApiService(user, session).delete_invoice(invoice_id)
