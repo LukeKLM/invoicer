@@ -85,9 +85,12 @@ class BaseRepository:
         return None
 
     async def delete(self, object_id: int):
-        query = self._delete().where(self.model.id == object_id)
-        await self.db_session.execute(query)
-        self.db_session.commit()
+        query = self._delete().where(self.model.id == object_id).returning(self.model)
+        result = await self.db_session.execute(query)
+        deleted_object = result.fetchone()
+        await self.db_session.commit()
+
+        return deleted_object
 
 
 class BaseRepositoryWithUser(BaseRepository):

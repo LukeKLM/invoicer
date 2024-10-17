@@ -12,8 +12,11 @@ class CreateInvoiceItem(BaseModel):
     quantity: int = 1
 
 
-class UpdateInvoiceItem(CreateInvoiceItem):
-    pass
+class UpdateInvoiceItem(BaseModel):
+    invoice_id: int | None = None
+    price: condecimal(max_digits=10, decimal_places=2) | None = None
+    title: str | None = Field(None, max_length=64)
+    quantity: int | None = None
 
 
 class RetrieveInvoiceItem(BaseModel):
