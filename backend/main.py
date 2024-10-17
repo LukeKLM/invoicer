@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
 
 from app.models.users import User
+from app.routers.invoice_customers import router as invoice_customers_router
 from app.routers.invoice_items import router as invoice_items_router
 from app.routers.invoices import router as invoices_router
 from app.schemas.users import UserCreate
@@ -33,3 +34,4 @@ app.include_router(
 )
 app.include_router(invoices_router)
 app.include_router(invoice_items_router)
+app.include_router(invoice_customers_router)

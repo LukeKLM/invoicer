@@ -13,7 +13,6 @@ class InvoiceCustomer(BaseModel):
 
     email = Column(String(length=255), nullable=True)
     name = Column(String(length=255), nullable=False)
-    user_id = Column(UUID, nullable=False)
     vat_id = Column(String(length=50), nullable=True)
 
     # address
@@ -21,3 +20,6 @@ class InvoiceCustomer(BaseModel):
     country = Column(String(length=255), nullable=True)
     street = Column(String(length=255), nullable=True)
     postal_code = Column(String(length=20), nullable=True)
+
+    # relations
+    user_id = Column(UUID, nullable=False)

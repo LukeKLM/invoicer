@@ -27,14 +27,11 @@ class BaseRepository:
     def _delete(self) -> Delete:
         return self._base_query(delete(self.model))
 
-    def _insert(self) -> Insert:
-        return insert(self.model)
+    def _insert(self, data: BaseModel) -> Insert:
+        return insert(self.model).values(data.model_dump())
 
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query
-
-    def _get_data_for_create(self, data: BaseModel):
-        return data.model_dump()
 
     async def get_list(self):
         query = self._select()
@@ -49,9 +46,7 @@ class BaseRepository:
         return detail.scalars().first()
 
     async def create(self, data: BaseModel):
-        data = self._get_data_for_create(data)
-
-        query = self._insert().values(data).returning(self.model)
+        query = self._insert(data).returning(self.model)
         result = await self.db_session.execute(query)
 
         new_record = result.scalars().first()
@@ -97,8 +92,9 @@ class BaseRepositoryWithUser(BaseRepository):
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query.where(self.model.user_id == self.user.id)
 
-    def _get_data_for_create(self, data: BaseModel):
-        return {
+    def _insert(self, data: BaseModel) -> Insert:
+        insert_data = {
             **data.model_dump(),
             "user_id": self.user.id,
         }
+        return insert(self.model).values(insert_data)
