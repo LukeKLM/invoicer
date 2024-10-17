@@ -1,5 +1,5 @@
 from app.models.users import User
-from app.repositories.invoice_customes import InvoiceCustomerRepository
+from app.repositories.invoice_customers import InvoiceCustomerRepository
 from app.schemas.customers import RetrieveInvoiceCustomer
 from app.services.api.base_api_service import BaseApiService
 from core.db import SessionLocal
