@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi import Depends
+from starlette.responses import StreamingResponse
 
 from app.models.users import User
 from app.schemas.invoices import InvoiceCreate
@@ -58,3 +59,12 @@ async def delete_invoice(
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceApiService(user, session).delete(invoice_id)
+
+
+@router.get("/{invoice_id}/pdf")
+async def get_invoice_pdf(
+    invoice_id: int,
+    user: User = Depends(current_active_user),
+    session: SessionLocal = Depends(get_session),
+) -> StreamingResponse:
+    return await InvoiceApiService(user, session).get_pdf(invoice_id)

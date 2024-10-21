@@ -11,6 +11,7 @@ from app.routers.invoices import router as invoices_router
 from app.schemas.users import UserCreate
 from app.schemas.users import UserRead
 from core.config import settings
+from core.jinja2_env import jinja_env
 from core.security import auth_backend
 from core.security import get_user_manager
 
@@ -37,3 +38,5 @@ app.include_router(invoices_router)
 app.include_router(invoice_items_router)
 app.include_router(invoice_customers_router)
 app.include_router(invoice_suppliers_router)
+
+print(f"Jinja initialized: {jinja_env}")
