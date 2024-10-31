@@ -1,84 +1,92 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link href="invoice.css" media="print" rel="stylesheet">
+    <link href="invoice.min.css" media="print" rel="stylesheet">
     <title>Invoice</title>
     <meta name="description" content="Invoice demo sample">
   </head>
 
   <body>
-    <h1>Invoice</h1>
+<div class="top-title uppercase bold flex justify-end font-size-25 mb-40">
+    <span class="bold-text mr-1">faktura</span><span class="gray-text bold">[INVOICE NUMBER 0001]</span>
+</div>
 
-    <aside>
-      <address id="from">
-        WeasyPrint
-        26 rue Emile Decorps
-        69100 Villeurbanne
-        France
-      </address>
+<div class="payment-info">
+    <div>
+        <span class="d-block mb-10">Částka k úhradě</span>
+        <span class="d-block bold font-size-25">[CELKEM K ÚHRADĚ] Kč</span>
+    </div>
+    <div class="w-50">
+        <div class="row">
+            <div class="pr-1 text-right w-50">Bankovní účet</div>
+            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+        </div>
+        <div class="row">
+            <div class="pr-1 text-right w-50">Variabilní symbol</div>
+            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+        </div>
+        <div class="row mb-10">
+            <div class="pr-1 text-right w-50">Způsob platby</div>
+            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+        </div>
+        <div class="row">
+            <div class="pr-1 text-right w-50">Datum vystavení</div>
+            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+        </div>
+        <div class="row">
+            <div class="pr-1 text-right w-50">Datum splatnosti</div>
+            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+        </div>
+    </div>
+</div>
 
-      <address id="to">
-        Our awesome developers
-        From all around the world
-        Earth
-      </address>
-    </aside>
+<div class="personal-info mb-40">
+    <div>
+        <small class="d-block mb-10">Dodavatel</small>
+        <div class="bold">[SUPPLIER NAME]</div>
+        <div>[STREET]</div>
+        <div class="mb-10">[ZIP CODE], [CITY]</div>
+        <div>IČO: [IČO]</div>
+        <small>Neplátce DPH</small> {# TODO: PUT CONDITION ON THAT #}
+    </div>
+    <div>
+        <small class="d-block mb-10">Odběratel</small>
+        <div class="bold">[SUBSCRIBER NAME]</div>
+        <div>[STREET]</div>
+        <div class="mb-10">[ZIP CODE], [CITY]</div>
+        <div>IČO: [IČO]</div>
+    </div>
+</div>
 
-    <dl id="informations">
-      <dt>Invoice number</dt>
-      <dd>12345</dd>
-      <dt>Date</dt>
-      <dd>March 31, 2018</dd>
-    </dl>
+<div class="invoice-items-block">
+    <div class="invoice-items mb-40">
+        <div class="invoice-item flex">
+            <div class="invoice-item__name">Popis položky</div>
+<!--            <div class="invoice-item__quantity">Množství</div>-->
+<!--            <div class="invoice-item__price">Cena za kus</div>-->
+            <div class="invoice-item__total">Cena</div>
+        </div>
+{#        {% for item in invoice.invoice_items %}#}
+        <div class="invoice-item flex">
+            <div class="invoice-item__name">[ITEM TITLE]</div>
+<!--            <div class="invoice-item__quantity">ITEM AMOUNT</div>-->
+<!--            <div class="invoice-item__price">ITEM VALUE</div>-->
+            <div class="invoice-item__total">[TOTAL SUM ITEM]</div>
+        </div>
+{#        {% endfor %}#}
+    </div>
+    <div class="invoice-summary text-right w-100">
+        <div class="invoice-summary__row">
+            <div class="invoice-summary__label">Celkem k úhradě</div>
+            <div class="invoice-summary__value">[TOTAL SUM]</div>
+        </div>
+    </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Website design</td>
-          <td>€34.20</td>
-          <td>100</td>
-          <td>€3,420.00</td>
-        </tr>
-        <tr>
-          <td>Website development</td>
-          <td>€45.50</td>
-          <td>100</td>
-          <td>€4,550.00</td>
-        </tr>
-        <tr>
-          <td>Website integration</td>
-          <td>€25.75</td>
-          <td>100</td>
-          <td>€2,575.00</td>
-        </tr>
-      </tbody>
-    </table>
+</div>
 
-    <footer>
-      <table id="total">
-        <thead>
-          <tr>
-            <th>Due by</th>
-            <th>Account number</th>
-            <th>Total due</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>May 10, 2018</td>
-            <td>132 456 789 012</td>
-            <td>€10,545.00</td>
-          </tr>
-        </tbody>
-      </table>
-    </footer>
+<section id="footer-section">
+    <small>Fyzická osoba zapsaná v živnostenském rejstříku.</small>
+</section>
+
   </body>
 </html>

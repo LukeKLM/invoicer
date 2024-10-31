@@ -31,3 +31,8 @@ Run from `backend` folder
 - Ruff
 - Black
 - Pytest
+
+# Invoicer Frontend
+
+## Build css from scss file
+- `sass --watch invoice.scss invoice.css --style compressed` [//] build compressed css from scss file

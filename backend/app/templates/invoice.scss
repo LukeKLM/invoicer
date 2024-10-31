@@ -1,0 +1,162 @@
+$text: #000;
+$gray_text: #999;
+$main_color: #00c1ff;
+$light_gray: #f5f5f5;
+$border_color: #e5e5e5;
+
+span {
+    color: $text;
+}
+
+:root {
+    font-size: 14px;
+    line-height: 22px;
+    --color-mbox: rgba(0, 0, 0, 0.2);
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* PAGES */
+@page {
+    size: A4;
+    margin-top: 2cm;
+    margin-right: 2cm;
+    margin-bottom: 3cm;
+    margin-left: 2cm;
+    /*@bottom-center {*/
+    /*    counter-increment: page 1;*/
+    /*    content: counter(page) '/' counter(pages);*/
+    /*    width: 50px;*/
+    /*}*/
+    /*@bottom-right {*/
+    /*   content: string(title_c);*/
+    /*   padding-left: 10px;*/
+    /*}*/
+    @bottom-left {
+       content:  string(title_v);
+    }
+    @bottom-center {
+        content: element(bottom_text);
+      }
+}
+
+/* BLOCKS - PAYMENT INFO */
+.payment-info {
+    background-color: $main_color;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+/* BLOCKS - PERSONAL INFO */
+.personal-info {
+    background-color: $light_gray;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+/* BLOCKS - INVOICE ITEMS INFO */
+.invoice-items-block {
+    .invoice-items {
+        .invoice-item  {
+            div {
+                border-bottom: 1px solid $border_color;
+                padding: 2px 10px;
+            }
+            .invoice-item__name {
+                width: 70%;
+            }
+            .invoice-item__quantity {
+                width: 15%;
+            }
+            .invoice-item__price {
+                width: 15%;
+            }
+            .invoice-item__total {
+                text-align: right;
+                width: 30%;
+            }
+        }
+    }
+}
+
+/* BLOCKS - FOOTER INFO */
+#footer-section {
+    position: running(bottom_text);
+}
+
+
+/* POSITIONING */
+.flex {
+    display: flex;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+/* SIZES */
+.w-50 {
+    width: 50%;
+}
+.w-100 {
+    width: 100%;
+}
+
+/* MARGINS */
+.mr-1 {
+    margin-right: 1rem;
+}
+.mb-10 {
+    margin-bottom: 10px;
+}
+.mb-40 {
+    margin-bottom: 40px;
+}
+
+/* PADDINGS */
+.pl-1 {
+    padding-left: 1rem;
+}
+
+.pr-1 {
+    padding-right: 1rem;
+}
+
+/* FONTS - SIZE */
+.font-size-25 {
+    font-size: 25px;
+}
+
+/* FONTS */
+
+.uppercase {
+	text-transform: uppercase;
+}
+.bold {
+	font-weight: bold;
+}
+.gray-text {
+    color: $gray_text;
+}
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+/* DISPLAY */
+.d-block {
+    display: block;
+}
