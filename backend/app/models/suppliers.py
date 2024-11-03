@@ -1,7 +1,9 @@
 from sqlalchemy import UUID
 from sqlalchemy import Column
+from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy.orm import relationship
 
 from core.db import BaseModel
 
@@ -14,7 +16,7 @@ class InvoiceSupplier(BaseModel):
     bank_account = Column(String(length=50), nullable=True)
     email = Column(String(length=255), nullable=True)
     name = Column(String(length=255), nullable=False)
-    user_id = Column(UUID, nullable=False)
+    user_id = Column(UUID, ForeignKey("user.id"), nullable=False)
     vat_id = Column(String(length=50), nullable=True)
 
     # address
@@ -22,3 +24,7 @@ class InvoiceSupplier(BaseModel):
     country = Column(String(length=255), nullable=True)
     street = Column(String(length=255), nullable=True)
     postal_code = Column(String(length=20), nullable=True)
+
+    # relations
+    invoices = relationship("Invoice", back_populates="supplier")
+    user = relationship("User", back_populates="suppliers")

@@ -4,8 +4,10 @@ from sqlalchemy import UUID
 from sqlalchemy import Column
 from sqlalchemy import Date
 from sqlalchemy import Enum as SQLAlchemyEnum
+from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy.orm import relationship
 
 from app.enums.invoice_enums import InvoicePaymentType
 from app.enums.invoice_enums import InvoiceState
@@ -22,7 +24,12 @@ class Invoice(BaseModel):
     invoice_number = Column(String(10), index=True, nullable=False)
     payment_type = Column(SQLAlchemyEnum(InvoicePaymentType), nullable=False)
     state = Column(SQLAlchemyEnum(InvoiceState), nullable=False)
-    subscriber_id = Column(Integer, nullable=False)
-    supplier_id = Column(Integer, nullable=False)
-    user_id = Column(UUID, nullable=False)
+    customer_id = Column(Integer, ForeignKey("invoice_customers.id"), nullable=False)
+    supplier_id = Column(Integer, ForeignKey("invoice_suppliers.id"), nullable=False)
+    user_id = Column(UUID, ForeignKey("user.id"), nullable=False)
     variable_symbol = Column(String(10), nullable=False)
+
+    customer = relationship("InvoiceCustomer", back_populates="invoices")
+    supplier = relationship("InvoiceSupplier", back_populates="invoices")
+    items = relationship("InvoiceItem", back_populates="invoice")
+    user = relationship("User", back_populates="invoices")
