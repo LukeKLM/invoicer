@@ -14,7 +14,7 @@ class InvoiceCreate(BaseModel):
     invoice_number: str = Field(max_length=10)
     payment_type: InvoicePaymentType
     state: InvoiceState
-    subscriber_id: int
+    customer_id: int
     supplier_id: int
     variable_symbol: str = Field(max_length=10)
 
@@ -26,7 +26,7 @@ class InvoiceUpdate(BaseModel):
     invoice_number: str | None = Field(max_length=10, default=None)
     payment_type: InvoicePaymentType | None = None
     state: InvoiceState | None = None
-    subscriber_id: int | None = None
+    customer_id: int | None = None
     supplier_id: int | None = None
     variable_symbol: str | None = Field(max_length=10, default=None)
 

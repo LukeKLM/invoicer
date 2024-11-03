@@ -10,7 +10,7 @@ from sqlalchemy.orm import declarative_base
 
 from core.config import settings
 
-engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URI))
+engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URI), echo=True)
 print(settings.SQLALCHEMY_DATABASE_URI)
 SessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
