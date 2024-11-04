@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DB: str = ""
 
+    SQLALCHEMY_LOG_ENABLED: bool = False
+
     class Config:
         env_file = ".env"
 

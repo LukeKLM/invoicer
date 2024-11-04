@@ -33,3 +33,7 @@ class Invoice(BaseModel):
     supplier = relationship("InvoiceSupplier", back_populates="invoices")
     items = relationship("InvoiceItem", back_populates="invoice")
     user = relationship("User", back_populates="invoices")
+
+    @property
+    def total_price(self):
+        return sum([item.total_price for item in self.items])

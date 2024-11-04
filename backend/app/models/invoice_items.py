@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from sqlalchemy import UUID
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
@@ -22,3 +24,7 @@ class InvoiceItem(BaseModel):
     # relations
     invoice = relationship("Invoice", back_populates="items")
     user = relationship("User", back_populates="invoice_items")
+
+    @property
+    def total_price(self):
+        return Decimal(self.price * self.quantity)

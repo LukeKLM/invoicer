@@ -8,34 +8,34 @@
 
   <body>
 <div class="top-title uppercase bold flex justify-end font-size-25 mb-40">
-    <span class="bold-text mr-1">faktura</span><span class="gray-text bold">[INVOICE NUMBER 0001]</span>
+    <span class="bold-text mr-1">faktura</span><span class="gray-text bold">{{ invoice.invoice_number }}</span>
 </div>
 
 <div class="payment-info">
     <div>
         <span class="d-block mb-10">Částka k úhradě</span>
-        <span class="d-block bold font-size-25">[CELKEM K ÚHRADĚ] Kč</span>
+        <span class="d-block bold font-size-25">{{ invoice.total_price }} Kč</span>
     </div>
     <div class="w-50">
         <div class="row">
             <div class="pr-1 text-right w-50">Bankovní účet</div>
-            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+            <div class="bold pl-1 text-left w-50">{{ invoice.supplier.bank_account }}</div>
         </div>
         <div class="row">
             <div class="pr-1 text-right w-50">Variabilní symbol</div>
-            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+            <div class="bold pl-1 text-left w-50">{{ invoice.variable_symbol }}</div>
         </div>
         <div class="row mb-10">
             <div class="pr-1 text-right w-50">Způsob platby</div>
-            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+            <div class="bold pl-1 text-left w-50">{{ invoice.payment_type }}</div>
         </div>
         <div class="row">
             <div class="pr-1 text-right w-50">Datum vystavení</div>
-            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+            <div class="bold pl-1 text-left w-50">{{ invoice.expose_date }}</div>
         </div>
         <div class="row">
             <div class="pr-1 text-right w-50">Datum splatnosti</div>
-            <div class="bold pl-1 text-left w-50">[01.01.2025]</div>
+            <div class="bold pl-1 text-left w-50">{{ invoice.due_date }}</div>
         </div>
     </div>
 </div>
@@ -43,18 +43,18 @@
 <div class="personal-info mb-40">
     <div>
         <small class="d-block mb-10">Dodavatel</small>
-        <div class="bold">[SUPPLIER NAME]</div>
-        <div>[STREET]</div>
-        <div class="mb-10">[ZIP CODE], [CITY]</div>
-        <div>IČO: [IČO]</div>
+        <div class="bold">{{ invoice.customer.name }}</div>
+        <div>{{ invoice.customer.street }}</div>
+        <div class="mb-10">{{ invoice.customer.postal_code }}, {{ invoice.customer.city }}</div>
+        <div>IČO: {{ invoice.customer.vat_id }}</div>
         <small>Neplátce DPH</small> {# TODO: PUT CONDITION ON THAT #}
     </div>
     <div>
         <small class="d-block mb-10">Odběratel</small>
-        <div class="bold">[CUSTOMER NAME]</div>
-        <div>[STREET]</div>
-        <div class="mb-10">[ZIP CODE], [CITY]</div>
-        <div>IČO: [IČO]</div>
+        <div class="bold">{{ invoice.supplier.name }}</div>
+        <div>{{ invoice.supplier.street }}</div>
+        <div class="mb-10">{{ invoice.supplier.postal_code }}, {{ invoice.supplier.city }}</div>
+        <div>IČO: {{ invoice.supplier.vat_id }}</div>
     </div>
 </div>
 
@@ -66,19 +66,19 @@
 <!--            <div class="invoice-item__price">Cena za kus</div>-->
             <div class="invoice-item__total">Cena</div>
         </div>
-{#        {% for item in invoice.invoice_items %}#}
+        {% for item in invoice.items %}
         <div class="invoice-item flex">
-            <div class="invoice-item__name">[ITEM TITLE]</div>
+            <div class="invoice-item__name">{{ item.title }}</div>
 <!--            <div class="invoice-item__quantity">ITEM AMOUNT</div>-->
 <!--            <div class="invoice-item__price">ITEM VALUE</div>-->
-            <div class="invoice-item__total">[TOTAL SUM ITEM]</div>
+            <div class="invoice-item__total">{{ item.price }}</div>
         </div>
-{#        {% endfor %}#}
+        {% endfor %}
     </div>
     <div class="invoice-summary text-right w-100">
         <div class="invoice-summary__row">
             <div class="invoice-summary__label">Celkem k úhradě</div>
-            <div class="invoice-summary__value">[TOTAL SUM]</div>
+            <div class="invoice-summary__value">{{ invoice.total_price }}</div>
         </div>
     </div>
 

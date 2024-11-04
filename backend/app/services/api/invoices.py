@@ -20,6 +20,8 @@ class InvoiceApiService(BaseApiService):
         self.output_schema = InvoiceRetrieve
 
     async def get_pdf(self, invoice_id: int) -> StreamingResponse:
+        invoice = await self.repository.get_invoice_with_relations(invoice_id)
+
         invoice_name = "invoice"
         headers = {
             "Content-Disposition": f'attachment; filename="{invoice_name}.pdf"',
@@ -30,8 +32,7 @@ class InvoiceApiService(BaseApiService):
         pdf_file: BytesIO = await generate_pdf(
             template=template,
             context={
-                "title": "Invoice",
-                "content": "This is the invoice content",
+                "invoice": invoice,
             },
         )
 
