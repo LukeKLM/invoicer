@@ -25,6 +25,7 @@ asyncpg = "^0.29.0"
 pydantic-settings = "^2.2.1"
 weasyprint = "^62.3"
 jinja2 = "^3.1.4"
+qrcode = "^8.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"

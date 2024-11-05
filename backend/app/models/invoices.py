@@ -37,3 +37,14 @@ class Invoice(BaseModel):
     @property
     def total_price(self):
         return sum([item.total_price for item in self.items])
+
+    def generate_czech_qr_string(self):
+        return (
+            f"SPD"
+            f"*1.0"
+            f"*ACC:{self.supplier.iban}"
+            f"*AM:{self.total_price:.2f}"
+            f"*CC:CZK"
+            f"*MSG:faktura {self.invoice_number}"
+            f"*X-VS:{self.variable_symbol}"
+        )

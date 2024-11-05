@@ -6,3 +6,5 @@ jinja_env = Environment(
     loader=PackageLoader("app", "templates"),
     autoescape=select_autoescape(),
 )
+
+jinja_env.filters["format_date"] = lambda value: value.strftime("%d.%m.%Y")

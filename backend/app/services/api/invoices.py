@@ -7,6 +7,7 @@ from app.repositories.invoices import InvoiceRepository
 from app.schemas.invoices import InvoiceRetrieve
 from app.services.api.base_api_service import BaseApiService
 from app.services.pdf_service import generate_pdf
+from app.services.qr_code_service import generate_qr_svg
 from core.db import SessionLocal
 
 if TYPE_CHECKING:
@@ -33,6 +34,9 @@ class InvoiceApiService(BaseApiService):
             template=template,
             context={
                 "invoice": invoice,
+                "qr_code": generate_qr_svg(
+                    invoice.generate_czech_qr_string(),
+                ),
             },
         )
 

@@ -14,6 +14,8 @@ class InvoiceSupplier(BaseModel):
     id = Column(Integer, primary_key=True, index=True)
 
     bank_account = Column(String(length=50), nullable=True)
+    bank_code = Column(String(length=10), nullable=True)
+    iban = Column(String(length=34), nullable=True)
     email = Column(String(length=255), nullable=True)
     name = Column(String(length=255), nullable=False)
     user_id = Column(UUID, ForeignKey("user.id"), nullable=False)
