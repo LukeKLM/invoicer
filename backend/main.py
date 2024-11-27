@@ -1,6 +1,7 @@
 import uuid
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_users import FastAPIUsers
 
 from app.models.users import User
@@ -18,6 +19,14 @@ from core.security import get_user_manager
 app = FastAPI(
     title=settings.BACKEND_APP_NAME,
     swagger_ui_parameters={"persistAuthorization": True},
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](

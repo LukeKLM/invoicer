@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     BACKEND_APP_NAME: str = "My API"
     DEBUG: bool = False
 
+    # CORS
+    CORS_ORIGINS: list[str] = (
+        "http://localhost",
+        "http://localhost:3000",
+    )
+
     # Database
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
