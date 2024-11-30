@@ -13,8 +13,7 @@ from core.db import SessionLocal
 
 
 class BaseRepository:
-    def __init__(self, user: User, db_session: SessionLocal):
-        self.user = user
+    def __init__(self, db_session: SessionLocal):
         self.db_session = db_session
         self.model = None
 
@@ -89,6 +88,10 @@ class BaseRepository:
 
 
 class BaseRepositoryWithUser(BaseRepository):
+    def __init__(self, user: User, db_session: SessionLocal):
+        super().__init__(db_session)
+        self.user = user
+
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query.where(self.model.user_id == self.user.id)
 

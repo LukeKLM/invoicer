@@ -32,6 +32,12 @@ Run from `backend` folder
 - Black
 - Pytest
 
+# Auth
+generate `SECRET_KEY` for JWT token
+```
+openssl rand -hex 32
+```
+
 # Invoicer Frontend
 
 ## Build css from scss file

@@ -25,6 +25,12 @@ class Settings(BaseSettings):
 
     SQLALCHEMY_LOG_ENABLED: bool = False
 
+    # auth settings
+    SECRET_KEY = ""
+    ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 600  # min
+    TOKEN_TYPE = "bearer"  # noqa S105
+
     class Config:
         env_file = ".env"
 

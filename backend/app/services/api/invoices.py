@@ -5,7 +5,7 @@ from starlette.responses import StreamingResponse
 from app.models.users import User
 from app.repositories.invoices import InvoiceRepository
 from app.schemas.invoices import InvoiceRetrieve
-from app.services.api.base_api_service import BaseApiService
+from app.services.api.base_api_service import BaseUserApiService
 from app.services.pdf_service import generate_pdf
 from app.services.qr_code_service import generate_qr_svg
 from core.db import SessionLocal
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from io import BytesIO
 
 
-class InvoiceApiService(BaseApiService):
+class InvoiceApiService(BaseUserApiService):
     def __init__(self, user: User, db_session: SessionLocal):
         super().__init__(user, db_session)
         self.repository = InvoiceRepository(user, db_session)

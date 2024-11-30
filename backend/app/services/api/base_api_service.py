@@ -6,8 +6,7 @@ from core.db import SessionLocal
 
 
 class BaseApiService:
-    def __init__(self, user: User, db_session: SessionLocal):
-        self.user = user
+    def __init__(self, db_session: SessionLocal):
         self.db_session = db_session
         self.repository = None
         self.output_schema = None
@@ -42,3 +41,9 @@ class BaseApiService:
         if deleted_item is None:
             message = f"{self.repository.model.__name__} with id {item_id} not found"
             raise NotFoundException(message)
+
+
+class BaseUserApiService(BaseApiService):
+    def __init__(self, user: User, db_session: SessionLocal):
+        super().__init__(db_session)
+        self.user = user

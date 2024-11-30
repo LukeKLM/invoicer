@@ -7,7 +7,7 @@ from app.schemas.customers import UpdateInvoiceCustomer
 from app.services.api.invoice_customers import InvoiceCustomerApiService
 from core.db import SessionLocal
 from core.db import get_session
-from core.security import current_active_user
+from core.security import get_current_active_user
 
 router = APIRouter(
     prefix="/invoice_customers",
@@ -17,7 +17,7 @@ router = APIRouter(
 
 @router.get("/")
 async def get_invoice_customers(
-    user: User = Depends(current_active_user),
+    user: User = Depends(get_current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceCustomerApiService(user, session).get_list()
@@ -26,7 +26,7 @@ async def get_invoice_customers(
 @router.get("/{invoice_customer_id}")
 async def get_invoice_customer(
     invoice_customer_id: int,
-    user: User = Depends(current_active_user),
+    user: User = Depends(get_current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceCustomerApiService(user, session).get_detail(
@@ -37,7 +37,7 @@ async def get_invoice_customer(
 @router.post("/")
 async def create_invoice_customer(
     invoice_customer: CreateInvoiceCustomer,
-    user: User = Depends(current_active_user),
+    user: User = Depends(get_current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceCustomerApiService(user, session).create(invoice_customer)
@@ -47,7 +47,7 @@ async def create_invoice_customer(
 async def update_invoice_customer(
     invoice_customer_id: int,
     invoice_customer: UpdateInvoiceCustomer,
-    user: User = Depends(current_active_user),
+    user: User = Depends(get_current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceCustomerApiService(user, session).update(
@@ -59,7 +59,7 @@ async def update_invoice_customer(
 @router.delete("/{invoice_customer_id}")
 async def delete_invoice_customer(
     invoice_customer_id: int,
-    user: User = Depends(current_active_user),
+    user: User = Depends(get_current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
     return await InvoiceCustomerApiService(user, session).delete(invoice_customer_id)
