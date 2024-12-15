@@ -36,6 +36,10 @@ mypy = "^1.10.0"
 black = "^24.4.2"
 pre-commit = "^3.7.1"
 
+
+[tool.poetry.group.production.dependencies]
+uvicorn = "^0.32.1"
+
 [tool.ruff] # https://beta.ruff.rs/docs/settings/
 fix = true
 line-length = 120
