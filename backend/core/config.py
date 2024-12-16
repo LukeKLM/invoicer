@@ -1,6 +1,9 @@
+from dotenv import load_dotenv
 from pydantic import PostgresDsn
 from pydantic.v1 import BaseSettings
 from pydantic_core import MultiHostUrl
+
+load_dotenv()
 
 
 class Settings(BaseSettings):
