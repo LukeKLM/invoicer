@@ -14,10 +14,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # CORS
-    CORS_ORIGINS: list[str] = (
-        "http://localhost",
-        "http://localhost:3000",
-    )
+    CORS_ORIGINS: list[str] = None
 
     # Database
     POSTGRES_SERVER: str = "localhost"

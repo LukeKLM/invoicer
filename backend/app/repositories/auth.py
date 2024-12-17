@@ -8,7 +8,7 @@ class AuthRepository(BaseRepository):
         super().__init__(db_session)
         self.model = User
 
-    async def get_by_email(self, email: str):
+    async def get_by_email(self, email: str) -> User:
         detail = await self.db_session.execute(
             self._select().where(self.model.email == email),
         )

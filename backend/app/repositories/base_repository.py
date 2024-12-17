@@ -26,8 +26,14 @@ class BaseRepository:
     def _delete(self) -> Delete:
         return self._base_query(delete(self.model))
 
-    def _insert(self, data: BaseModel) -> Insert:
-        return insert(self.model).values(data.model_dump())
+    def _insert(self, data: any) -> Insert:
+        if not isinstance(data, BaseModel) and not isinstance(data, dict):
+            message = "Data must be a BaseModel or a dict"
+            raise ValueError(message)
+
+        data_dict = data.model_dump() if isinstance(data, BaseModel) else data
+
+        return insert(self.model).values(data_dict)
 
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query
@@ -44,7 +50,7 @@ class BaseRepository:
         )
         return detail.scalars().first()
 
-    async def create(self, data: BaseModel):
+    async def create(self, data: any):
         query = self._insert(data).returning(self.model)
         result = await self.db_session.execute(query)
 
@@ -95,9 +101,12 @@ class BaseRepositoryWithUser(BaseRepository):
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query.where(self.model.user_id == self.user.id)
 
-    def _insert(self, data: BaseModel) -> Insert:
-        insert_data = {
-            **data.model_dump(),
-            "user_id": self.user.id,
-        }
-        return insert(self.model).values(insert_data)
+    def _insert(self, data: any) -> Insert:
+        if not isinstance(data, BaseModel) or not isinstance(data, dict):
+            message = "Data must be a BaseModel or a dict"
+            raise ValueError(message)
+
+        data_dict = data.model_dump() if isinstance(data, BaseModel) else data
+        data_dict.update({"user_id": self.user.id})
+
+        return super()._insert(data_dict)
