@@ -10,7 +10,7 @@ from core.db import get_session
 from core.security import get_current_active_user
 
 router = APIRouter(
-    prefix="/invoice_suppliers",
+    prefix="/invoice-suppliers",
     tags=["InvoiceSuppliers"],
 )
 

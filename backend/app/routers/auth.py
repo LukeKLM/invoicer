@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter
 from fastapi import Depends
 
+# from fastapi.security import OAuth2PasswordRequestForm
 from app.schemas.auth import UserLogin
 from app.schemas.tokens import Token
 from app.schemas.users import UserDetail
@@ -21,10 +22,12 @@ router = APIRouter(
 @router.post("/token")
 async def login_for_access_token(
     form_data: UserLogin,
+    # form_data: Annotated[OAuth2PasswordRequestForm, Depends()],  # from Swagger
     session: SessionLocal = Depends(get_session),
 ) -> Token:
     user = await AuthApiService(session).authenticate_user(
         form_data.email,
+        # form_data.username,
         form_data.password,
     )
     return generate_access_token(user)

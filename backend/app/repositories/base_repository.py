@@ -102,8 +102,8 @@ class BaseRepositoryWithUser(BaseRepository):
         return query.where(self.model.user_id == self.user.id)
 
     def _insert(self, data: any) -> Insert:
-        if not isinstance(data, BaseModel) or not isinstance(data, dict):
-            message = "Data must be a BaseModel or a dict"
+        if not isinstance(data, BaseModel) and not isinstance(data, dict):
+            message = "Custom: Data must be a BaseModel or a dict"
             raise ValueError(message)
 
         data_dict = data.model_dump() if isinstance(data, BaseModel) else data
