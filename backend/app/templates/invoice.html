@@ -14,9 +14,9 @@
 <div class="payment-info">
     <div>
         <span class="d-block mb-10">Částka k úhradě</span>
-        <span class="d-block bold font-size-25">{{ invoice.total_price }} Kč</span>
+        <span class="d-block bold font-size-25">{{ invoice.total_price|amount }} Kč</span>
     </div>
-    <div class="w-50">
+    <div class="w-60">
         <div class="row">
             <div class="pr-1 text-right w-50">Bankovní účet</div>
             <div class="bold pl-1 text-left w-50">{{ invoice.supplier.bank_account }}/{{ invoice.supplier.bank_code }}</div>
@@ -27,7 +27,7 @@
         </div>
         <div class="row mb-10">
             <div class="pr-1 text-right w-50">Způsob platby</div>
-            <div class="bold pl-1 text-left w-50">{{ invoice.payment_type }}</div>
+            <div class="bold pl-1 text-left w-50">{{ invoice.payment_type.get_name() }}</div>
         </div>
         <div class="row">
             <div class="pr-1 text-right w-50">Datum vystavení</div>
@@ -43,45 +43,49 @@
 <div class="personal-info mb-40">
     <div>
         <small class="d-block mb-10">Dodavatel</small>
-        <div class="bold">{{ invoice.customer.name }}</div>
-        <div>{{ invoice.customer.street }}</div>
-        <div class="mb-10">{{ invoice.customer.postal_code }}, {{ invoice.customer.city }}</div>
-        <div>IČO: {{ invoice.customer.vat_id }}</div>
+        <div class="bold">{{ invoice.supplier.name }}</div>
+        <div>{{ invoice.supplier.street }}</div>
+        <div class="mb-10">{{ invoice.supplier.postal_code }} {{ invoice.supplier.city }}</div>
+        <div>IČO: {{ invoice.supplier.vat_id }}</div>
         <small>Neplátce DPH</small> {# TODO: PUT CONDITION ON THAT #}
     </div>
     <div>
         <small class="d-block mb-10">Odběratel</small>
-        <div class="bold">{{ invoice.supplier.name }}</div>
-        <div>{{ invoice.supplier.street }}</div>
-        <div class="mb-10">{{ invoice.supplier.postal_code }}, {{ invoice.supplier.city }}</div>
-        <div>IČO: {{ invoice.supplier.vat_id }}</div>
+        <div class="bold">{{ invoice.customer.name }}</div>
+        <div>{{ invoice.customer.street }}</div>
+        <div class="mb-10">{{ invoice.customer.postal_code }}, {{ invoice.customer.city }}</div>
+        <div>IČO: {{ invoice.customer.vat_id }}</div>
+        {% if invoice.customer.dic_id %}<div>DIČ: {{ invoice.customer.dic_id }}</div>{% endif %}
     </div>
 </div>
 
 <div class="invoice-items-block">
     <div class="invoice-items mb-40">
         <div class="invoice-item flex">
-            <div class="invoice-item__name">Popis položky</div>
-<!--            <div class="invoice-item__quantity">Množství</div>-->
-<!--            <div class="invoice-item__price">Cena za kus</div>-->
-            <div class="invoice-item__total">Cena</div>
+            <div class="invoice-item__quantity small"></div>
+            <div class="invoice-item__name small"></div>
+            <div class="invoice-item__price small">Cena za MJ</div>
+            <div class="invoice-item__total small">Celkem</div>
         </div>
         {% for item in invoice.items %}
         <div class="invoice-item flex">
+            <div class="invoice-item__quantity">{{ item.quantity }}{% if item.unit %} {{ item.unit }}{% endif %}</div>
             <div class="invoice-item__name">{{ item.title }}</div>
-<!--            <div class="invoice-item__quantity">ITEM AMOUNT</div>-->
-<!--            <div class="invoice-item__price">ITEM VALUE</div>-->
-            <div class="invoice-item__total">{{ item.price }}</div>
+            <div class="invoice-item__price">{{ item.price|amount }} Kč</div>
+            <div class="invoice-item__total">{{ item.total_price|amount }} Kč</div>
         </div>
         {% endfor %}
     </div>
     <div class="invoice-summary text-right w-100">
         <div class="invoice-summary__row">
             <div class="invoice-summary__label">Celkem k úhradě</div>
-            <div class="invoice-summary__value">{{ invoice.total_price }}</div>
+            <div class="invoice-summary__value bold">{{ invoice.total_price|amount }} Kč</div>
         </div>
     </div>
-    <img src="data:image/svg+xml;base64,{{qr_code}}" alt="QR Code" width="400" />
+    <div style="position: relative;">
+        <img src="data:image/svg+xml;base64,{{qr_code}}" alt="QR Code" width="400" />
+        <span class="d-absolute small" style="bottom:-10px;left:15px;">QR platba</span>
+    </div>
 </div>
 
 <section id="footer-section">

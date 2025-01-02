@@ -6,6 +6,7 @@ class CreateInvoiceCustomer(BaseModel):
     email: str = Field(max_length=255)
     name: str = Field(max_length=255)
     vat_id: str = Field(max_length=50)
+    dic_id: str = Field(max_length=50)
 
     city: str = Field(max_length=255)
     country: str = Field(max_length=255)
@@ -17,6 +18,7 @@ class UpdateInvoiceCustomer(BaseModel):
     email: str | None = Field(None, max_length=255)
     name: str | None = Field(None, max_length=255)
     vat_id: str | None = Field(None, max_length=50)
+    dic_id: str | None = Field(None, max_length=50)
 
     city: str | None = Field(None, max_length=255)
     country: str | None = Field(None, max_length=255)

@@ -19,6 +19,7 @@ class InvoiceItem(BaseModel):
     price = Column(Numeric(precision=10, scale=2), nullable=False)
     title = Column(String(64), nullable=False)
     quantity = Column(Integer, nullable=False, default=1)
+    unit = Column(String(10), nullable=True)
     user_id = Column(UUID, ForeignKey("user.id"), nullable=False)
 
     # relations

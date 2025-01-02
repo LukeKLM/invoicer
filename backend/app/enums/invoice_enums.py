@@ -8,9 +8,8 @@ class InvoicePaymentType(StrEnum):
     CASH = "CASH"
     BANK_TRANSFER = "BANK_TRANSFER"
 
-    @staticmethod
-    def get_name(key: str) -> str:
-        return INVOICE_PAYMENT_TRANSLATION.get(key)
+    def get_name(self) -> str:
+        return INVOICE_PAYMENT_TRANSLATION.get(self)
 
 
 class InvoiceState(StrEnum):
@@ -19,6 +18,5 @@ class InvoiceState(StrEnum):
     PAID = "PAID"
     CANCELLED = "CANCELLED"
 
-    @staticmethod
-    def get_name(cls, key: str) -> str:
-        return INVOICE_STATE_TRANSLATION.get(key)
+    def get_name(self) -> str:
+        return INVOICE_STATE_TRANSLATION.get(self)

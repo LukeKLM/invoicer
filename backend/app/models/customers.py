@@ -17,6 +17,7 @@ class InvoiceCustomer(BaseModel):
     email = Column(String(length=255), nullable=True)
     name = Column(String(length=255), nullable=False)
     vat_id = Column(String(length=50), nullable=True)
+    dic_id = Column(String(length=50), nullable=True)
 
     # address
     city = Column(String(length=255), nullable=True)
