@@ -4,6 +4,7 @@ from sqlalchemy import Insert
 from sqlalchemy import Select
 from sqlalchemy import Update
 from sqlalchemy import delete
+from sqlalchemy import desc
 from sqlalchemy import insert
 from sqlalchemy import select
 from sqlalchemy import update
@@ -18,7 +19,7 @@ class BaseRepository:
         self.model = None
 
     def _select(self) -> Select:
-        return self._base_query(select(self.model))
+        return self._base_query(select(self.model)).order_by(desc(self.model.id))
 
     def _update(self) -> Update:
         return self._base_query(update(self.model))
