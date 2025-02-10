@@ -20,8 +20,11 @@ class InvoiceApiService(BaseUserApiService):
         self.repository = InvoiceRepository(user, db_session)
         self.output_schema = InvoiceRetrieve
 
+    def get_list_with_relations(self):
+        return self.repository.get_with_relations()
+
     async def get_pdf(self, invoice_id: int) -> StreamingResponse:
-        invoice = await self.repository.get_invoice_with_relations(invoice_id)
+        invoice = await self.repository.get_with_relations(invoice_id)
 
         invoice_name = "invoice"
         headers = {

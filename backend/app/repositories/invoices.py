@@ -14,7 +14,7 @@ class InvoiceRepository(BaseRepositoryWithUser):
 
     # todo: make it more general wit related models?
     # todo: like withSupplier, withCustomer, withItems
-    async def get_invoice_with_relations(self, invoice_id: int):
+    async def get_with_relations(self, invoice_id: int):
         detail = await self.db_session.execute(
             self._select()
             .options(

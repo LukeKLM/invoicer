@@ -6,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - "./postgresql/:/var/run/postgresql/"
+      - "./pg_data/:/var/lib/postgresql/data"
     environment:
       POSTGRES_DB: invoicer
       POSTGRES_USER: invoicer
