@@ -53,8 +53,10 @@ class BaseRepository:
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query
 
-    async def get_list(self):
+    async def get_list(self, options=None):
         query = self._select()
+        if options:
+            query = query.options(options)
 
         list = await self.db_session.execute(query)
         return list.scalars().all()
@@ -90,9 +92,7 @@ class BaseRepository:
 
         return new_records
 
-    async def update(self, object_id: int, data: BaseModel, commit=False):
-        data = data.model_dump(exclude_none=True)
-
+    async def update(self, object_id: int, data: dict, commit=False):
         query = (
             self._update()
             .where(self.model.id == object_id)
@@ -108,6 +108,17 @@ class BaseRepository:
             await self.db_session.refresh(updated_record)
 
         return updated_record
+
+    async def bulk_update(self, data: list[any], commit=False):
+        result = await self.db_session.execute(
+            self._update().execution_options(synchronize_session=None),
+            data,
+        )
+
+        if commit:
+            await self.db_session.commit()
+
+        return result
 
     async def delete(self, object_id: int, commit=False):
         query = self._delete().where(self.model.id == object_id).returning(self.model)

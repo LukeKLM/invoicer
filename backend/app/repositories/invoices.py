@@ -16,20 +16,20 @@ class InvoiceRepository(BaseRepositoryWithUser):
         detail = await self.db_session.execute(
             self._select()
             .options(
-                # joinedload(Invoice.customer),
-                # joinedload(Invoice.supplier),
                 selectinload(Invoice.items),
             )
             .where(self.model.id == invoice_id),
         )
         return detail.scalars().first()
 
-    async def get_all(self):
+    async def get_detail_with_relations(self, invoice_id: int):
         detail = await self.db_session.execute(
-            self._select().options(
+            self._select()
+            .options(
                 joinedload(Invoice.customer),
                 joinedload(Invoice.supplier),
                 selectinload(Invoice.items),
-            ),
+            )
+            .where(self.model.id == invoice_id),
         )
-        return detail.scalars().all()
+        return detail.scalars().first()

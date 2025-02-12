@@ -9,6 +9,7 @@ from app.enums.invoice_enums import InvoiceState
 
 
 class InvoiceItemSchema(BaseModel):
+    id: int | None = None
     invoice_id: int | None = None
     price: condecimal(max_digits=10, decimal_places=2)
     title: str = Field(max_length=64)
@@ -44,6 +45,7 @@ class InvoiceUpdate(BaseModel):
     customer_id: int | None = None
     supplier_id: int | None = None
     variable_symbol: str | None = Field(max_length=10, default=None)
+    items: list[InvoiceItemSchema] = []
 
 
 class InvoiceRetrieve(InvoiceCreate):

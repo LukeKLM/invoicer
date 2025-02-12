@@ -49,7 +49,7 @@ async def update_invoice(
     user: User = Depends(get_current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
-    return await InvoiceApiService(user, session).update(invoice_id, invoice)
+    return await InvoiceApiService(user, session).update_with_items(invoice_id, invoice)
 
 
 @router.delete("/{invoice_id}")

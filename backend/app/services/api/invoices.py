@@ -1,8 +1,10 @@
 from typing import TYPE_CHECKING
 
+from sqlalchemy.orm import selectinload
 from starlette.responses import StreamingResponse
 
 from app.exceptions.api_exceptions import NotFoundException
+from app.models import Invoice
 from app.models.users import User
 from app.repositories.invoice_items import InvoiceItemRepository
 from app.repositories.invoices import InvoiceRepository
@@ -39,7 +41,7 @@ class InvoiceApiService(BaseUserApiService):
         return self.output_schema(**invoice_data)
 
     async def create_with_items(self, data: InvoiceCreate):
-        data_dict = data.model_dump()
+        data_dict = data.model_dump(exclude_none=True)
         items = data_dict.pop("items", [])
 
         # todo: do some validation here?
@@ -58,12 +60,38 @@ class InvoiceApiService(BaseUserApiService):
         await self.db_session.commit()
         return new_invoice
 
-    async def get_all(self):
-        invoices = await self.repository.get_all()
-        return [self.output_schema(**invoice.__dict__) for invoice in invoices]
+    async def update_with_items(self, invoice_id: int, invoice_data: InvoiceCreate):
+        data_dict = invoice_data.model_dump(exclude_none=True)
+        items = data_dict.pop("items", [])
+
+        invoice = await self.repository.update(invoice_id, data_dict)
+        self.db_session.flush(invoice)
+
+        await InvoiceItemRepository(self.user, self.db_session).bulk_update(items)
+
+        mapped_items = [InvoiceItemSchema(**item) for item in items]
+        updated_invoice = self.output_schema(**invoice.__dict__, items=mapped_items)
+        await self.db_session.commit()
+
+        return updated_invoice
+
+    async def get_list(self):
+        invoices = await self.repository.get_list(
+            options=selectinload(Invoice.items),
+        )
+
+        mapped_invoices = []
+        for invoice in invoices:
+            items = [InvoiceItemSchema.model_validate(item) for item in invoice.items]
+            invoice_data = {**invoice.__dict__, "items": items}
+            mapped_invoices.append(
+                self.output_schema(**invoice_data),
+            )
+
+        return mapped_invoices
 
     async def get_pdf(self, invoice_id: int) -> StreamingResponse:
-        invoice = await self.repository.get_one(invoice_id)
+        invoice = await self.repository.get_detail_with_relations(invoice_id)
 
         invoice_name = "invoice"
         headers = {
