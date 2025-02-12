@@ -27,14 +27,28 @@ class BaseRepository:
     def _delete(self) -> Delete:
         return self._base_query(delete(self.model))
 
+    def format_insert_data(self, data):
+        data = data if isinstance(data, list) else [data]
+
+        new_data = []
+        for item_data in data:
+            if not isinstance(item_data, BaseModel) and not isinstance(item_data, dict):
+                message = "Custom: Data must be a BaseModel or a dict"
+                raise ValueError(message)
+
+            new_data_item = (
+                item_data.model_dump()
+                if isinstance(item_data, BaseModel)
+                else item_data
+            )
+            new_data.append(new_data_item)
+
+        return new_data
+
     def _insert(self, data: any) -> Insert:
-        if not isinstance(data, BaseModel) and not isinstance(data, dict):
-            message = "Data must be a BaseModel or a dict"
-            raise ValueError(message)
+        data_list = self.format_insert_data(data)
 
-        data_dict = data.model_dump() if isinstance(data, BaseModel) else data
-
-        return insert(self.model).values(data_dict)
+        return insert(self.model).values(data_list)
 
     def _base_query(self, query) -> Select | Insert | Update | Delete:
         return query
@@ -51,20 +65,32 @@ class BaseRepository:
         )
         return detail.scalars().first()
 
-    async def create(self, data: any):
+    async def create(self, data: any, commit=False):
         query = self._insert(data).returning(self.model)
         result = await self.db_session.execute(query)
 
         new_record = result.scalars().first()
-        if new_record:
+        if new_record and commit:
             await self.db_session.commit()
             await self.db_session.refresh(new_record)
 
-            return new_record
+        return new_record
 
-        return None
+    async def bulk_create(self, data: list[any], commit=False):
+        if not data:
+            return []
 
-    async def update(self, object_id: int, data: BaseModel):
+        query = self._insert(data).returning(self.model)
+        result = await self.db_session.execute(query)
+
+        new_records = result.scalars().all()
+
+        if commit:
+            await self.db_session.commit()
+
+        return new_records
+
+    async def update(self, object_id: int, data: BaseModel, commit=False):
         data = data.model_dump(exclude_none=True)
 
         query = (
@@ -77,19 +103,19 @@ class BaseRepository:
 
         updated_record = result.scalars().first()
 
-        if updated_record:
+        if updated_record and commit:
             await self.db_session.commit()
             await self.db_session.refresh(updated_record)
 
-            return updated_record
+        return updated_record
 
-        return None
-
-    async def delete(self, object_id: int):
+    async def delete(self, object_id: int, commit=False):
         query = self._delete().where(self.model.id == object_id).returning(self.model)
         result = await self.db_session.execute(query)
         deleted_object = result.fetchone()
-        await self.db_session.commit()
+
+        if commit:
+            await self.db_session.commit()
 
         return deleted_object
 
@@ -103,11 +129,9 @@ class BaseRepositoryWithUser(BaseRepository):
         return query.where(self.model.user_id == self.user.id)
 
     def _insert(self, data: any) -> Insert:
-        if not isinstance(data, BaseModel) and not isinstance(data, dict):
-            message = "Custom: Data must be a BaseModel or a dict"
-            raise ValueError(message)
+        new_data = self.format_insert_data(data)
 
-        data_dict = data.model_dump() if isinstance(data, BaseModel) else data
-        data_dict.update({"user_id": self.user.id})
+        for item_data in new_data:
+            item_data.update({"user_id": self.user.id})
 
-        return super()._insert(data_dict)
+        return insert(self.model).values(new_data)

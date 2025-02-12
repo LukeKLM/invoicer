@@ -21,22 +21,30 @@ class BaseApiService:
             message = f"{self.repository.model.__name__} with id {item_id} not found"
             raise NotFoundException(message)
 
-        return self.output_schema(**item.__dict__)
+        return self.output_schema.model_validate(item)
 
     async def create(self, item: BaseModel):
         new_item = await self.repository.create(item)
-        return self.output_schema(**new_item.__dict__)
+        await self.db_session.flush(new_item)
+
+        new_item = self.output_schema(**new_item.__dict__)
+        await self.db_session.commit()
+        return new_item
 
     async def update(self, item_id: int, item: BaseModel):
         updated_item = await self.repository.update(item_id, item)
+        await self.db_session.flush(updated_item)
+
         if not updated_item:
             message = f"{self.repository.model.__name__} with id {item_id} not found"
             raise NotFoundException(message)
 
-        return self.output_schema(**updated_item.__dict__)
+        updated_item = self.output_schema(**updated_item.__dict__)
+        await self.db_session.commit()
+        return updated_item
 
     async def delete(self, item_id: int):
-        deleted_item = await self.repository.delete(item_id)
+        deleted_item = await self.repository.delete(item_id, commit=True)
 
         if deleted_item is None:
             message = f"{self.repository.model.__name__} with id {item_id} not found"

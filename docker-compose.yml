@@ -12,3 +12,4 @@ services:
       POSTGRES_USER: invoicer
       POSTGRES_PASSWORD: invoicer
       POSTGRES_HOST: 'localhost'
+    command: [ "postgres", "-c", "log_statement=all" ]

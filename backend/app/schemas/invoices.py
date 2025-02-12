@@ -2,9 +2,20 @@ from datetime import date
 
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import condecimal
 
 from app.enums.invoice_enums import InvoicePaymentType
 from app.enums.invoice_enums import InvoiceState
+
+
+class InvoiceItemSchema(BaseModel):
+    invoice_id: int | None = None
+    price: condecimal(max_digits=10, decimal_places=2)
+    title: str = Field(max_length=64)
+    quantity: int = 1
+
+    class Config:
+        from_attributes = True
 
 
 class InvoiceCreate(BaseModel):
@@ -17,6 +28,10 @@ class InvoiceCreate(BaseModel):
     customer_id: int
     supplier_id: int
     variable_symbol: str = Field(max_length=10)
+    items: list[InvoiceItemSchema] = []
+
+    class Config:
+        from_attributes = True
 
 
 class InvoiceUpdate(BaseModel):

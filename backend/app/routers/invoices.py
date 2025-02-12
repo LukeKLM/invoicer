@@ -39,7 +39,7 @@ async def create_invoice(
     user: User = Depends(get_current_active_user),
     session: SessionLocal = Depends(get_session),
 ):
-    return await InvoiceApiService(user, session).create(invoice)
+    return await InvoiceApiService(user, session).create_with_items(invoice)
 
 
 @router.patch("/{invoice_id}")
