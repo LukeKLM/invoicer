@@ -56,7 +56,7 @@ class BaseRepository:
     async def get_list(self, options=None):
         query = self._select()
         if options:
-            query = query.options(options)
+            query = query.options(*options)
 
         list = await self.db_session.execute(query)
         return list.scalars().all()

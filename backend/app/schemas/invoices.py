@@ -8,6 +8,22 @@ from app.enums.invoice_enums import InvoicePaymentType
 from app.enums.invoice_enums import InvoiceState
 
 
+class InvoiceSupplierSchema(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
+class InvoiceCustomerSchema(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
 class InvoiceItemSchema(BaseModel):
     id: int | None = None
     invoice_id: int | None = None
@@ -48,8 +64,18 @@ class InvoiceUpdate(BaseModel):
     items: list[InvoiceItemSchema] = []
 
 
-class InvoiceRetrieve(InvoiceCreate):
+class InvoiceRetrieve(BaseModel):
     id: int
+    due_date: date
+    expose_date: date
+    invoice_number: str
+    payment_type: InvoicePaymentType
+    state: InvoiceState
+    variable_symbol: str
+    items: list[InvoiceItemSchema] = []
+    supplier: InvoiceSupplierSchema
+    customer: InvoiceCustomerSchema
+    total_price: str | None = None
 
     class Config:
         from_attributes = True

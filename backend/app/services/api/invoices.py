@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import selectinload
 from starlette.responses import StreamingResponse
 
@@ -9,8 +10,11 @@ from app.models.users import User
 from app.repositories.invoice_items import InvoiceItemRepository
 from app.repositories.invoices import InvoiceRepository
 from app.schemas.invoices import InvoiceCreate
+from app.schemas.invoices import InvoiceCustomerSchema
 from app.schemas.invoices import InvoiceItemSchema
 from app.schemas.invoices import InvoiceRetrieve
+from app.schemas.invoices import InvoiceSupplierSchema
+from app.schemas.invoices import InvoiceUpdate
 from app.services.api.base_api_service import BaseUserApiService
 from app.services.pdf_service import generate_pdf
 from app.services.qr_code_service import generate_qr_svg
@@ -67,23 +71,47 @@ class InvoiceApiService(BaseUserApiService):
         invoice = await self.repository.update(invoice_id, data_dict)
         self.db_session.flush(invoice)
 
+        items_to_be_created = []
+        for item in items:
+            if not item.get("id"):
+                items_to_be_created.append(item)
+                items.remove(item)
+
         await InvoiceItemRepository(self.user, self.db_session).bulk_update(items)
 
-        mapped_items = [InvoiceItemSchema(**item) for item in items]
-        updated_invoice = self.output_schema(**invoice.__dict__, items=mapped_items)
+        if items_to_be_created:
+            await InvoiceItemRepository(self.user, self.db_session).bulk_create(
+                items_to_be_created,
+            )
+
+        mapped_items = [InvoiceItemSchema(**item) for item in items] + [
+            InvoiceItemSchema(**item) for item in items_to_be_created
+        ]
+        updated_invoice = InvoiceUpdate(**invoice.__dict__, items=mapped_items)
+
         await self.db_session.commit()
 
         return updated_invoice
 
     async def get_list(self):
         invoices = await self.repository.get_list(
-            options=selectinload(Invoice.items),
+            options=[
+                selectinload(Invoice.items),
+                joinedload(Invoice.customer),
+                joinedload(Invoice.supplier),
+            ],
         )
 
         mapped_invoices = []
         for invoice in invoices:
             items = [InvoiceItemSchema.model_validate(item) for item in invoice.items]
-            invoice_data = {**invoice.__dict__, "items": items}
+            invoice_data = {
+                **invoice.__dict__,
+                "items": items,
+                "customer": InvoiceCustomerSchema.model_validate(invoice.customer),
+                "supplier": InvoiceSupplierSchema.model_validate(invoice.supplier),
+                "total_price": str(invoice.total_price),
+            }
             mapped_invoices.append(
                 self.output_schema(**invoice_data),
             )
