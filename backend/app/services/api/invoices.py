@@ -41,7 +41,11 @@ class InvoiceApiService(BaseUserApiService):
         #  - converting related sqlalchemy objects to pydantic objects
         items = [InvoiceItemSchema.model_validate(item) for item in invoice.items]
 
-        invoice_data = {**invoice.__dict__, "items": items}
+        invoice_data = {
+            **invoice.__dict__,
+            "items": items,
+            "total_price": str(invoice.total_price),
+        }
         return self.output_schema(**invoice_data)
 
     async def create_with_items(self, data: InvoiceCreate):
@@ -54,14 +58,13 @@ class InvoiceApiService(BaseUserApiService):
         self.db_session.flush(invoice)
 
         invoice_items = [{**item, "invoice_id": invoice.id} for item in items]
-        new_items = await InvoiceItemRepository(self.user, self.db_session).bulk_create(
+        await InvoiceItemRepository(self.user, self.db_session).bulk_create(
             invoice_items,
         )
-        self.db_session.flush(new_items)
-        mapped_items = [InvoiceItemSchema(**item.__dict__) for item in new_items]
 
-        new_invoice = self.output_schema(**invoice.__dict__, items=mapped_items)
+        new_invoice = await self.get_detail(invoice.id)
         await self.db_session.commit()
+
         return new_invoice
 
     async def update_with_items(self, invoice_id: int, invoice_data: InvoiceCreate):

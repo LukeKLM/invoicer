@@ -5,7 +5,7 @@ from pydantic import Field
 class CreateInvoiceSupplier(BaseModel):
     bank_account: str = Field(max_length=50)
     bank_code: str = Field(max_length=10)
-    iban: str = Field(max_length=34)
+    iban: str | None = Field(max_length=34)
     email: str = Field(max_length=255)
     name: str = Field(max_length=255)
     vat_id: str = Field(max_length=50)

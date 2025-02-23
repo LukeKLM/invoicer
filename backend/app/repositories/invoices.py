@@ -16,6 +16,8 @@ class InvoiceRepository(BaseRepositoryWithUser):
         detail = await self.db_session.execute(
             self._select()
             .options(
+                joinedload(Invoice.customer),
+                joinedload(Invoice.supplier),
                 selectinload(Invoice.items),
             )
             .where(self.model.id == invoice_id),

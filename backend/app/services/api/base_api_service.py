@@ -32,7 +32,11 @@ class BaseApiService:
         return new_item
 
     async def update(self, item_id: int, item: BaseModel):
-        updated_item = await self.repository.update(item_id, item)
+        item_dict = (
+            item.model_dump(exclude_none=True) if isinstance(item, BaseModel) else item
+        )
+
+        updated_item = await self.repository.update(item_id, item_dict)
         await self.db_session.flush(updated_item)
 
         if not updated_item:

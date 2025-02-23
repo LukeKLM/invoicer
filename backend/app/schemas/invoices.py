@@ -10,7 +10,16 @@ from app.enums.invoice_enums import InvoiceState
 
 class InvoiceSupplierSchema(BaseModel):
     id: int
+    bank_account: str
+    bank_code: str
+    iban: str | None
+    email: str
     name: str
+    vat_id: str
+    city: str
+    country: str
+    street: str
+    postal_code: str
 
     class Config:
         from_attributes = True
@@ -18,7 +27,14 @@ class InvoiceSupplierSchema(BaseModel):
 
 class InvoiceCustomerSchema(BaseModel):
     id: int
+    email: str
     name: str
+    vat_id: str
+    dic_id: str | None
+    city: str
+    country: str
+    street: str
+    postal_code: str
 
     class Config:
         from_attributes = True
