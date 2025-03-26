@@ -1,5 +1,7 @@
 import uuid
 
+from pydantic import EmailStr
+
 from app.exceptions.api_exceptions import AuthenticationFailedException
 from app.exceptions.api_exceptions import NotFoundException
 from app.repositories.auth import AuthRepository
@@ -33,7 +35,7 @@ class AuthApiService(BaseApiService):
 
         return user
 
-    async def create_user(self, email: str, password1: str, password2: str):
+    async def create_user(self, email: EmailStr, password1: str, password2: str):
         user = UserRegister(
             email=email,
             password1=password1,
@@ -46,5 +48,6 @@ class AuthApiService(BaseApiService):
                 "email": user.email,
                 "hashed_password": get_password_hash(password1),
             },
+            commit=True,
         )
         return self.output_schema(**user.__dict__)
