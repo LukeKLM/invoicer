@@ -1,8 +1,5 @@
 import asyncio
 import contextlib
-from typing import cast
-
-from pydantic import EmailStr
 
 from app.services.api.auth import AuthApiService
 from core.db import get_session
@@ -11,7 +8,7 @@ get_async_session_context = contextlib.asynccontextmanager(get_session)
 
 
 async def create_user(
-    email: EmailStr,
+    email: str,
     password: str,
     password2: str,
 ):
@@ -29,7 +26,7 @@ async def create_user(
 if __name__ == "__main__":
     asyncio.run(
         create_user(
-            email=cast(EmailStr, "lukas@lukas.cz"),
+            email="lukas2@lukas.cz",
             password="lukas",  # noqa
             password2="lukas",
         ),

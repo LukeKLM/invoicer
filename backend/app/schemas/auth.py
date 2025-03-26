@@ -1,16 +1,15 @@
 from pydantic import BaseModel
-from pydantic import EmailStr
 from pydantic import Field
 from pydantic import model_validator
 
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    email: str
     password: str
 
 
 class UserRegister(BaseModel):
-    email: EmailStr
+    email: str
     password1: str = Field(..., min_length=10)
     password2: str
 
