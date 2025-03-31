@@ -4,7 +4,8 @@ from fastapi import APIRouter
 from fastapi import Depends
 
 from app.helpers.http_clients.google_http_client import GoogleHttpClient
-from app.schemas.auth import UserLogin, GoogleCallbackLogin
+from app.schemas.auth import GoogleCallbackLogin
+from app.schemas.auth import UserLogin
 
 # from fastapi.security import OAuth2PasswordRequestForm
 from app.schemas.tokens import Token
@@ -23,9 +24,9 @@ router = APIRouter(
 
 @router.post("/token")
 async def login_for_access_token(
-        form_data: UserLogin,
-        # form_data: Annotated[OAuth2PasswordRequestForm, Depends()],  # from Swagger
-        session: SessionLocal = Depends(get_session),
+    form_data: UserLogin,
+    # form_data: Annotated[OAuth2PasswordRequestForm, Depends()],  # from Swagger
+    session: SessionLocal = Depends(get_session),
 ) -> Token:
     user = await AuthApiService(session).authenticate_user(
         form_data.email,
@@ -37,14 +38,14 @@ async def login_for_access_token(
 
 @router.get("/users/me/", response_model=UserDetail)
 async def read_users_me(
-        current_user: Annotated[UserDetail, Depends(get_current_active_user)],
+    current_user: Annotated[UserDetail, Depends(get_current_active_user)],
 ):
     return current_user
 
 
 @router.get("/google/callback")
 async def google_login_callback(
-        login_data: Annotated[GoogleCallbackLogin, Depends()],
-        session: SessionLocal = Depends(get_session),
+    login_data: Annotated[GoogleCallbackLogin, Depends()],
+    session: SessionLocal = Depends(get_session),
 ):
     await GoogleHttpClient().change_code_for_token(login_data.code)
