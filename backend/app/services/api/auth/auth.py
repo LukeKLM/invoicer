@@ -2,7 +2,7 @@ import uuid
 
 from app.exceptions.api_exceptions import AuthenticationFailedException
 from app.exceptions.api_exceptions import NotFoundException
-from app.repositories.auth import AuthRepository
+from app.repositories.users import UserRepository
 from app.schemas.auth import UserRegister
 from app.schemas.users import UserDetail
 from app.services.api.base_api_service import BaseApiService
@@ -14,7 +14,7 @@ from core.security import verify_password
 class AuthApiService(BaseApiService):
     def __init__(self, db_session: SessionLocal):
         super().__init__(db_session)
-        self.repository = AuthRepository(db_session)
+        self.repository = UserRepository(db_session)
         self.output_schema = UserDetail
 
     async def get_by_email(self, email: str) -> UserDetail:

@@ -4,6 +4,7 @@ import httpx
 from google.auth import jwt
 
 from app.helpers.http_clients.base_http_client import BaseHttpClient
+from app.schemas.auth import GoogleIdTokenDetail
 from app.schemas.auth import GoogleToken
 from core.config import settings
 
@@ -16,7 +17,7 @@ class GoogleHttpClient(BaseHttpClient):
         self.client_secret = settings.GOOGLE_CLIENT_SECRET
         self.redirect_uri = "http://localhost:8000/auth/google/callback"
 
-    async def change_code_for_token(self, code):
+    async def change_code_for_token(self, code) -> GoogleIdTokenDetail | None:
         data = {
             "code": code,
             "client_id": self.client_id,
@@ -39,6 +40,5 @@ class GoogleHttpClient(BaseHttpClient):
         )
 
         payload = jwt.decode(google_token.id_token, verify=False)
-        print(payload)
 
-        return response
+        return GoogleIdTokenDetail(**payload)

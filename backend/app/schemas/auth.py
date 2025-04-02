@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from pydantic import Field
 from pydantic import model_validator
 
+from app.schemas.users import UserDetail
+
 
 class UserLogin(BaseModel):
     email: str
@@ -34,3 +36,31 @@ class GoogleToken(BaseModel):
     token_type: str
     scope: str
     id_token: str
+
+
+class GoogleIdTokenDetail(BaseModel):
+    aud: str
+    exp: int
+    iat: int
+    iss: str
+    sub: str
+    at_hash: str
+    azp: str
+    email: str
+    email_verified: bool
+    family_name: str
+    given_name: str
+    hd: str
+    locale: str
+    name: str
+    picture: str
+    nonce: str
+    profile: str
+
+
+class OAuthAccountDetail:
+    id: int
+    identifier: str
+    oauth_type: str
+    user_id: str
+    user: UserDetail
