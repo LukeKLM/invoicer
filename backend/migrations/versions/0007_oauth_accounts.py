@@ -2,7 +2,7 @@
 
 Revision ID: 0007
 Revises: 0006
-Create Date: 2025-04-02 12:41:47.319616
+Create Date: 2025-04-02 14:19:40.551656
 
 """
 from collections.abc import Sequence
@@ -37,6 +37,7 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
+        sa.ForeignKeyConstraint(["user_id"], ["user.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

@@ -49,3 +49,14 @@ class AuthApiService(BaseApiService):
             commit=True,
         )
         return self.output_schema(**user.__dict__)
+
+    async def create_user_no_password(self, email: str):
+        user = await self.repository.create(
+            {
+                "id": uuid.uuid4(),
+                "email": email,
+                "hashed_password": None,
+            },
+            commit=True,
+        )
+        return self.output_schema(**user.__dict__)

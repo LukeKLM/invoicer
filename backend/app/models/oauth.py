@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import UUID
 from sqlalchemy import Enum as SQLAlchemyEnum
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -18,6 +19,6 @@ class OAuthAccount(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     identifier: Mapped[str_255]
     oauth_type: Mapped[str_10 | None] = mapped_column(SQLAlchemyEnum(OAuthEnum))
-    user_id: Mapped[uuid.UUID] = mapped_column(UUID)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey("user.id"))
 
     user = relationship("User", back_populates="oauth_accounts")

@@ -44,18 +44,17 @@ class GoogleIdTokenDetail(BaseModel):
     iat: int
     iss: str
     sub: str
-    at_hash: str
-    azp: str
+    at_hash: str | None = None
+    azp: str | None = None
     email: str
-    email_verified: bool
-    family_name: str
-    given_name: str
-    hd: str
-    locale: str
-    name: str
-    picture: str
-    nonce: str
-    profile: str
+    email_verified: bool = False
+    family_name: str | None = None
+    given_name: str | None = None
+    locale: str | None = None
+    name: str | None = None
+    picture: str | None = None
+    nonce: str | None = None
+    profile: str | None = None
 
 
 class OAuthAccountDetail:
