@@ -32,6 +32,5 @@ class GoogleToken(BaseModel):
     access_token: str
     expires_in: int
     token_type: str
-    refresh_token: str
     scope: str
     id_token: str

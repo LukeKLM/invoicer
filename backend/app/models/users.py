@@ -5,10 +5,10 @@ from sqlalchemy import String
 from sqlalchemy import Text
 from sqlalchemy.orm import relationship
 
-from core.db import Base
+from core.db import BaseModel
 
 
-class User(Base):
+class User(BaseModel):
     __tablename__ = "user"
 
     id = Column(UUID, primary_key=True, index=True)
@@ -23,3 +23,4 @@ class User(Base):
     customers = relationship("InvoiceCustomer", back_populates="user")
     invoices = relationship("Invoice", back_populates="user")
     invoice_items = relationship("InvoiceItem", back_populates="user")
+    oauth_accounts = relationship("OAuthAccount", back_populates="user")

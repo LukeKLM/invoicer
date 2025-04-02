@@ -1,14 +1,14 @@
 from collections.abc import AsyncGenerator
-from datetime import datetime
 
-from sqlalchemy import Column
-from sqlalchemy import DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
 
 from core.config import settings
+from core.db_utils import default_now
+from core.db_utils import update_now
 
 engine = create_async_engine(
     str(settings.SQLALCHEMY_DATABASE_URI),
@@ -23,11 +23,8 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-Base = declarative_base()
-
-
-class BaseModel(Base):
+class BaseModel(DeclarativeBase):
     __abstract__ = True
 
-    created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[default_now]
+    updated_at: Mapped[update_now]

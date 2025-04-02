@@ -1,6 +1,7 @@
 import json
 
-import jwt
+import httpx
+from google.auth import jwt
 
 from app.helpers.http_clients.base_http_client import BaseHttpClient
 from app.schemas.auth import GoogleToken
@@ -30,18 +31,14 @@ class GoogleHttpClient(BaseHttpClient):
             headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
 
-        if not response or not response.ok:
+        if not response or response.status_code != httpx.codes.OK:
             return None
 
         google_token = GoogleToken(
             **json.loads(response.text),
         )
 
-        payload = jwt.decode(
-            google_token.access_token,
-            settings.SECRET_KEY,
-            algorithms=[settings.ALGORITHM],
-        )
+        payload = jwt.decode(google_token.id_token, verify=False)
         print(payload)
 
         return response
