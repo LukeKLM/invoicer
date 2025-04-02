@@ -28,6 +28,9 @@ class AuthApiService(BaseApiService):
     async def authenticate_user(self, email: str, password: str):
         user: UserDetail = await self.get_by_email(email)
 
+        if not email or not password:
+            raise AuthenticationFailedException
+
         if not verify_password(password, user.hashed_password):
             raise AuthenticationFailedException
 

@@ -87,7 +87,7 @@ async def get_current_active_user(
     return current_user
 
 
-def generate_access_token(user):
+def generate_access_token(user) -> Token:
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email},

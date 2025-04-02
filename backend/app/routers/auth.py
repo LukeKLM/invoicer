@@ -1,7 +1,9 @@
 from typing import Annotated
 
+import httpx
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi.responses import RedirectResponse
 
 from app.schemas.auth import GoogleCallbackLogin
 from app.schemas.auth import UserLogin
@@ -11,6 +13,7 @@ from app.schemas.tokens import Token
 from app.schemas.users import UserDetail
 from app.services.api.auth import AuthApiService
 from app.services.api.auth.google_auth import GoogleAuthenticatorService
+from core.config import settings
 from core.db import SessionLocal
 from core.db import get_session
 from core.security import generate_access_token
@@ -50,4 +53,10 @@ async def google_login_callback(
 ):
     google_service = GoogleAuthenticatorService(session)
     detail_google_token = await google_service.identify_user(login_data.code)
-    return await google_service.get_or_create_user(detail_google_token)
+    user = await google_service.get_or_create_user(detail_google_token)
+    token = generate_access_token(user)
+
+    return RedirectResponse(
+        url=f"{settings.FRONTEND_URL}/oauth-login?token={token.access_token}",
+        status_code=httpx.codes.FOUND,
+    )
