@@ -15,6 +15,8 @@ Run from `backend` folder
 - `alembic upgrade #hash#` [//] run specific migration
 - `alembic downgrade #hash#` [//] revert specific migration
 
+❗❗ When new model is created and inherits from BaseModel, DO NOT FORGET to call `attach_updated_at_triggers_to_all_tables()` in alembic migrations (upgrade method). It set update_at trigger. ❗❗
+
 ## Pre-commit
 - `pre-commit install` [//] install pre-commit hooks
 

@@ -8,7 +8,6 @@ from sqlalchemy.orm import Mapped
 
 from core.config import settings
 from core.db_utils import default_now
-from core.db_utils import update_now
 
 engine = create_async_engine(
     str(settings.SQLALCHEMY_DATABASE_URI),
@@ -27,4 +26,6 @@ class BaseModel(DeclarativeBase):
     __abstract__ = True
 
     created_at: Mapped[default_now]
-    updated_at: Mapped[update_now]
+    updated_at: Mapped[
+        default_now
+    ]  # onupdate is solved in db (trigger - trigger_set_updated_at)

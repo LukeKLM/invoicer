@@ -27,13 +27,13 @@ def upgrade() -> None:
         sa.Column("user_id", sa.UUID(), nullable=False),
         sa.Column(
             "created_at",
-            sa.DateTime(),
+            sa.DateTime(timezone=True),
             server_default=sa.text("now()"),
             nullable=False,
         ),
         sa.Column(
             "updated_at",
-            sa.DateTime(),
+            sa.DateTime(timezone=True),
             server_default=sa.text("now()"),
             nullable=False,
         ),
