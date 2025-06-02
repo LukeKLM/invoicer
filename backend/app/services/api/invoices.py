@@ -26,7 +26,6 @@ if TYPE_CHECKING:
 
 class InvoiceApiService(BaseUserApiService):
     def __init__(self, user: User, db_session: SessionLocal):
-        self.db_session = db_session
         super().__init__(user, db_session)
         self.repository = InvoiceRepository(user, db_session)
         self.output_schema = InvoiceRetrieve
