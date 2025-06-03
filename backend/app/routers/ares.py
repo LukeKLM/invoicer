@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.schemas.ares_economic_subjects import AresEconomicSubject
-from app.services.ares_service import AresApiService
+from app.services.ares.ares_schema import AresEconomicSubject
+from app.services.ares.ares_service import AresApiService
 
 router = APIRouter(
     prefix="/ares",

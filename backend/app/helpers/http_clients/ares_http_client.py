@@ -1,7 +1,7 @@
 import json
 
 from app.helpers.http_clients.base_http_client import BaseHttpClient
-from app.schemas.ares_economic_subjects import AresEconomicSubject
+from app.services.ares.ares_schema import AresEconomicSubject
 
 
 class AresHttpClient(BaseHttpClient):
@@ -19,5 +19,24 @@ class AresHttpClient(BaseHttpClient):
         if not result:
             return None
 
-        json_data = json.loads(result.text)
-        return AresEconomicSubject(**json_data) if json_data else None
+        response_data = json.loads(result.text)
+
+        model_data = {
+            "ico": response_data.get("ico"),
+            "dic": response_data.get("dic"),
+            "name": response_data.get("obchodniJmeno"),
+            "residence": {
+                "state": response_data.get("sidlo", {}).get("nazevStatu"),
+                "city": response_data.get("sidlo", {}).get("nazevObce"),
+                "city_part": response_data.get("sidlo", {}).get("nazevCastiObce"),
+                "street": response_data.get("sidlo", {}).get("nazevUlice"),
+                "zip_code": response_data.get("sidlo", {}).get("psc"),
+                "house_number": response_data.get("sidlo", {}).get("cisloDomovni"),
+                "reference_number": response_data.get("sidlo", {}).get(
+                    "cisloOrientacni",
+                ),
+                "full_address": response_data.get("sidlo", {}).get("textovaAdresa"),
+            },
+        }
+
+        return AresEconomicSubject(**model_data) if model_data else None
