@@ -44,3 +44,7 @@ openssl rand -hex 32
 
 ## Build css from scss file
 - `sass --watch invoice.scss invoice.css --style compressed` [//] build compressed css from scss file
+
+
+# Well-known bugs
+- Pydantic alias vs Fastapi open api schema: https://github.com/fastapi/fastapi/issues/1810#issuecomment-895126406
