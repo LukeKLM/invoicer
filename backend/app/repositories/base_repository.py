@@ -27,7 +27,7 @@ class BaseRepository:
     def _delete(self) -> Delete:
         return self._base_query(delete(self.model))
 
-    def format_insert_data(self, data):
+    def format_insert_data(self, data) -> [dict]:
         data = data if isinstance(data, list) else [data]
 
         new_data = []

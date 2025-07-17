@@ -3,7 +3,7 @@ from app.repositories.base_repository import BaseRepository
 from core.db import SessionLocal
 
 
-class AuthRepository(BaseRepository):
+class UserRepository(BaseRepository):
     def __init__(self, db_session: SessionLocal):
         super().__init__(db_session)
         self.model = User

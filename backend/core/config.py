@@ -31,6 +31,13 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES = 600  # min
     TOKEN_TYPE = "bearer"  # noqa S105
 
+    # Google
+    GOOGLE_CLIENT_ID = ""
+    GOOGLE_CLIENT_SECRET = ""
+
+    # Front-end
+    FRONTEND_URL = "http://localhost:3000"
+
     class Config:
         env_file = ".env"
 

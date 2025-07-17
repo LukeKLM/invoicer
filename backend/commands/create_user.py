@@ -26,7 +26,7 @@ async def create_user(
 if __name__ == "__main__":
     asyncio.run(
         create_user(
-            email="lukas2@lukas.cz",
+            email="lukas@lukas.cz",
             password="lukas",  # noqa
             password2="lukas",
         ),

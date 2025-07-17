@@ -2,7 +2,7 @@ import uuid
 
 from app.exceptions.api_exceptions import AuthenticationFailedException
 from app.exceptions.api_exceptions import NotFoundException
-from app.repositories.auth import AuthRepository
+from app.repositories.users import UserRepository
 from app.schemas.auth import UserRegister
 from app.schemas.users import UserDetail
 from app.services.api.base_api_service import BaseApiService
@@ -14,7 +14,7 @@ from core.security import verify_password
 class AuthApiService(BaseApiService):
     def __init__(self, db_session: SessionLocal):
         super().__init__(db_session)
-        self.repository = AuthRepository(db_session)
+        self.repository = UserRepository(db_session)
         self.output_schema = UserDetail
 
     async def get_by_email(self, email: str) -> UserDetail:
@@ -27,6 +27,9 @@ class AuthApiService(BaseApiService):
 
     async def authenticate_user(self, email: str, password: str):
         user: UserDetail = await self.get_by_email(email)
+
+        if not email or not password:
+            raise AuthenticationFailedException
 
         if not verify_password(password, user.hashed_password):
             raise AuthenticationFailedException
@@ -45,6 +48,17 @@ class AuthApiService(BaseApiService):
                 "id": uuid.uuid4(),
                 "email": user.email,
                 "hashed_password": get_password_hash(password1),
+            },
+            commit=True,
+        )
+        return self.output_schema(**user.__dict__)
+
+    async def create_user_no_password(self, email: str):
+        user = await self.repository.create(
+            {
+                "id": uuid.uuid4(),
+                "email": email,
+                "hashed_password": None,
             },
             commit=True,
         )

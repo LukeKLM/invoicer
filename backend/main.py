@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routers.ares import router as ares_router
 from app.routers.auth import router as auth_router
 from app.routers.invoice_customers import router as invoice_customers_router
 from app.routers.invoice_items import router as invoice_items_router
@@ -27,5 +28,6 @@ app.include_router(invoices_router)
 app.include_router(invoice_items_router)
 app.include_router(invoice_customers_router)
 app.include_router(invoice_suppliers_router)
+app.include_router(ares_router)
 
 print(f"Jinja initialized: {jinja_env}")
