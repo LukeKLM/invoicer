@@ -28,6 +28,7 @@ class Invoice(BaseModel):
     supplier_id = Column(Integer, ForeignKey("invoice_suppliers.id"), nullable=False)
     user_id = Column(UUID, ForeignKey("user.id"), nullable=False)
     variable_symbol = Column(String(10), nullable=False)
+    order_number = Column(String(20), nullable=True)
 
     customer = relationship("InvoiceCustomer", back_populates="invoices")
     supplier = relationship("InvoiceSupplier", back_populates="invoices")

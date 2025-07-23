@@ -29,6 +29,12 @@
             <div class="pr-1 text-right w-50">Způsob platby</div>
             <div class="bold pl-1 text-left w-50">{{ invoice.payment_type.get_name() }}</div>
         </div>
+        {% if invoice.order_number %}
+        <div class="row">
+            <div class="pr-1 text-right w-50">Číslo objednávky</div>
+            <div class="bold pl-1 text-left w-50">{{ invoice.order_number }}</div>
+        </div>
+        {% endif %}
         <div class="row">
             <div class="pr-1 text-right w-50">Datum vystavení</div>
             <div class="bold pl-1 text-left w-50">{{ invoice.expose_date|format_date }}</div>

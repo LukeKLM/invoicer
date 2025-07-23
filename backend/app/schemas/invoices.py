@@ -62,6 +62,7 @@ class InvoiceCreate(BaseModel):
     supplier_id: int
     variable_symbol: str = Field(max_length=10)
     items: list[InvoiceItemSchema] = []
+    order_number: str | None = Field(max_length=20, default=None)
 
     class Config:
         from_attributes = True
@@ -78,6 +79,7 @@ class InvoiceUpdate(BaseModel):
     supplier_id: int | None = None
     variable_symbol: str | None = Field(max_length=10, default=None)
     items: list[InvoiceItemSchema] = []
+    order_number: str | None = Field(max_length=20, default=None)
 
 
 class InvoiceRetrieve(BaseModel):
@@ -91,6 +93,7 @@ class InvoiceRetrieve(BaseModel):
     items: list[InvoiceItemSchema] = []
     supplier: InvoiceSupplierSchema
     customer: InvoiceCustomerSchema
+    order_number: str | None
     total_price: str | None = None
 
     class Config:
