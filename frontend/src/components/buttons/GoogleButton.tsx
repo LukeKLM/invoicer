@@ -7,7 +7,7 @@ const GoogleButton = () => {
     const state = "testsecretstate"
     const params = new URLSearchParams({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID!,
-      redirect_uri: "http://localhost:8000/auth/google/callback",
+      redirect_uri: `${import.meta.env.VITE_API_URL}/auth/google/callback`,
       response_type: "code",
       scope: "openid email profile",
       state
