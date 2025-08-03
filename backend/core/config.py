@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET = ""
 
     # Front-end
-    FRONTEND_URL = "http://localhost:3000"
+    FRONTEND_URL = ""
 
     class Config:
         env_file = ".env"
