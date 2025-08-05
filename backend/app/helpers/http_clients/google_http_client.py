@@ -15,7 +15,7 @@ class GoogleHttpClient(BaseHttpClient):
     def __init__(self):
         self.client_id = settings.GOOGLE_CLIENT_ID
         self.client_secret = settings.GOOGLE_CLIENT_SECRET
-        self.redirect_uri = "http://localhost:8000/auth/google/callback"
+        self.redirect_uri = settings.GOOGLE_REDIRECT_URI
 
     async def change_code_for_token(self, code) -> GoogleIdTokenDetail | None:
         data = {
