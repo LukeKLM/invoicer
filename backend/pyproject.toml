@@ -1,14 +1,9 @@
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "invoicer"
-version = "0.1.0"
-description = ""
-authors = ["Lukáš Klíma <info@lukasklima.cz>"]
-license = "MIT"
-readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "3.11.9"
@@ -33,7 +28,7 @@ google-auth = "^2.38.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"
-ruff = "^0.4.5"
+ruff = "^0.13.0"
 mypy = "^1.10.0"
 black = "^24.4.2"
 pre-commit = "^3.7.1"
@@ -53,7 +48,6 @@ lint.select = [
   "C4", # flake8-comprehensions - comprehensions instead of for loops where possible
   "C90", # mccabe - finds complex code blocks in your project
   "COM", # flake8-commas - checks for missing trailing commas
-  "DJ", # flake8-django - checks for common Django issues and missing migrations in your project
   "E", # pycodestyle errors - flake8 default errors (pycodestyle)
   "EM", # flake8-errmsg - checks for common error messages in your project
   "F", # pyflakes - flake8 default errors (pyflakes)
