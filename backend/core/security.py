@@ -19,16 +19,6 @@ from core.config import settings
 from core.db import SessionLocal
 from core.db import get_session
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "is_active": False,
-    },
-}
-
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Custom auth implementation
