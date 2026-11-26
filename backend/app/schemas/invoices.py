@@ -82,6 +82,11 @@ class InvoiceUpdate(BaseModel):
     order_number: str | None = Field(max_length=20, default=None)
 
 
+class NextInvoiceNumber(BaseModel):
+    invoice_number: str
+    variable_symbol: str
+
+
 class InvoiceRetrieve(BaseModel):
     id: int
     due_date: date

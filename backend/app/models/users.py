@@ -24,3 +24,7 @@ class User(BaseModel):
     invoices = relationship("Invoice", back_populates="user")
     invoice_items = relationship("InvoiceItem", back_populates="user")
     oauth_accounts = relationship("OAuthAccount", back_populates="user")
+    skip_pay_calculator_settings = relationship(
+        "SkipPayCalculatorSettings",
+        back_populates="user",
+    )

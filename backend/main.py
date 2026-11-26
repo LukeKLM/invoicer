@@ -7,6 +7,7 @@ from app.routers.invoice_customers import router as invoice_customers_router
 from app.routers.invoice_items import router as invoice_items_router
 from app.routers.invoice_suppliers import router as invoice_suppliers_router
 from app.routers.invoices import router as invoices_router
+from app.routers.skip_pay_calculator import router as skip_pay_calculator_router
 from core.config import settings
 from core.jinja2_env import jinja_env
 
@@ -29,5 +30,6 @@ app.include_router(invoice_items_router)
 app.include_router(invoice_customers_router)
 app.include_router(invoice_suppliers_router)
 app.include_router(ares_router)
+app.include_router(skip_pay_calculator_router)
 
 print(f"Jinja initialized: {jinja_env}")

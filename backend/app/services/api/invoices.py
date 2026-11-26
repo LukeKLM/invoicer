@@ -4,6 +4,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import selectinload
 from starlette.responses import StreamingResponse
 
+from app.exceptions.api_exceptions import ConflictException
 from app.exceptions.api_exceptions import NotFoundException
 from app.models import Invoice
 from app.models.users import User
@@ -15,7 +16,11 @@ from app.schemas.invoices import InvoiceItemSchema
 from app.schemas.invoices import InvoiceRetrieve
 from app.schemas.invoices import InvoiceSupplierSchema
 from app.schemas.invoices import InvoiceUpdate
+from app.schemas.invoices import NextInvoiceNumber
 from app.services.api.base_api_service import BaseUserApiService
+from app.services.invoice_numbering import get_latest_invoice_number
+from app.services.invoice_numbering import increment_invoice_number
+from app.services.invoice_numbering import variable_symbol_from_number
 from app.services.pdf_service import generate_pdf
 from app.services.qr_code_service import generate_qr_svg
 from core.db import SessionLocal
@@ -47,7 +52,19 @@ class InvoiceApiService(BaseUserApiService):
         }
         return self.output_schema(**invoice_data)
 
+    async def get_next_number(self) -> NextInvoiceNumber:
+        latest = get_latest_invoice_number(await self.repository.get_invoice_numbers())
+        invoice_number = increment_invoice_number(latest)
+        return NextInvoiceNumber(
+            invoice_number=invoice_number,
+            variable_symbol=variable_symbol_from_number(invoice_number),
+        )
+
     async def create_with_items(self, data: InvoiceCreate):
+        if await self.repository.exists_with_number(data.invoice_number):
+            message = f"Invoice with number {data.invoice_number} already exists"
+            raise ConflictException(message)
+
         data_dict = data.model_dump(exclude_none=True)
         items = data_dict.pop("items", [])
 

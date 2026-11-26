@@ -28,3 +28,9 @@ class InvoiceCustomer(BaseModel):
     # relations
     invoices = relationship("Invoice", back_populates="customer")
     user = relationship("User", back_populates="customers")
+    skip_pay_calculator_settings = relationship(
+        "SkipPayCalculatorSettings",
+        back_populates="customer",
+        uselist=False,
+        passive_deletes=True,
+    )
