@@ -24,6 +24,15 @@ async def get_invoices(
     return await InvoiceApiService(user, session).get_list()
 
 
+# must stay above /{invoice_id}, otherwise "next-number" is parsed as an id
+@router.get("/next-number")
+async def get_next_invoice_number(
+    user: User = Depends(get_current_active_user),
+    session: SessionLocal = Depends(get_session),
+):
+    return await InvoiceApiService(user, session).get_next_number()
+
+
 @router.get("/{invoice_id}")
 async def get_invoice(
     invoice_id: int,

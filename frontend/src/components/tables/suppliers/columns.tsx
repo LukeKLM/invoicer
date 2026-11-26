@@ -4,54 +4,51 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Supplier } from "@/types/supplier";
 import { SupplierTableActions } from "@/components/tables/suppliers/SupplierTableActions";
 import SupplierDetailLink from "@/components/tables/suppliers/SupplierDetailLink";
+import { AddressCell, EmptyValue, MonoCell } from "@/components/contacts/ContactCells";
+import { Sensitive } from "@/components/ui/sensitive";
 
 export const columns: ColumnDef<Supplier>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
-    accessorKey: "name",
+    id: "name",
+    // name first so sorting follows the name; email included so search matches it
+    accessorFn: (row) => `${row.name ?? ""} ${row.email ?? ""}`,
     header: "Name",
     cell: ({ row }) => {
       return <SupplierDetailLink supplier={row.original as Supplier} />;
     },
   },
   {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
     accessorKey: "vatId",
-    header: "VAT ID",
+    header: "IČO",
+    cell: ({ row }) => <MonoCell value={row.original.vatId} />,
   },
   {
-    accessorKey: "city",
-    header: "City",
+    id: "address",
+    accessorFn: (row) => [row.street, row.postalCode, row.city, row.country].filter(Boolean).join(" "),
+    header: "Address",
+    cell: ({ row }) => (
+      <AddressCell
+        street={row.original.street}
+        postalCode={row.original.postalCode}
+        city={row.original.city}
+        country={row.original.country}
+      />
+    ),
   },
   {
-    accessorKey: "country",
-    header: "Country",
-  },
-  {
-    accessorKey: "street",
-    header: "Street",
-  },
-  {
-    accessorKey: "postalCode",
-    header: "Postal Code",
-  },
-  {
-    accessorKey: "bankAccount",
-    header: "Bank Account",
-  },
-  {
-    accessorKey: "bankCode",
-    header: "Bank Code",
-  },
-  {
-    accessorKey: "iban",
-    header: "IBAN",
+    id: "bank",
+    accessorFn: (row) => [row.bankAccount && `${row.bankAccount}/${row.bankCode}`, row.iban].filter(Boolean).join(" "),
+    header: "Bank account",
+    cell: ({ row }) => {
+      const { bankAccount, bankCode, iban } = row.original
+      if (!bankAccount && !iban) return <EmptyValue />
+      return (
+        <div className="whitespace-nowrap font-mono text-xs">
+          {bankAccount && <p className="text-foreground"><Sensitive>{bankAccount}</Sensitive>{bankCode && `/${bankCode}`}</p>}
+          {iban && <p className="text-muted-foreground"><Sensitive>{iban}</Sensitive></p>}
+        </div>
+      )
+    },
   },
   {
     id: "actions",

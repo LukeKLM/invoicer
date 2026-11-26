@@ -25,6 +25,7 @@ passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 bcrypt = "4.0.1"
 greenlet = "^3.1.1"
 google-auth = "^2.38.0"
+holidays = "^0.109"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.1"

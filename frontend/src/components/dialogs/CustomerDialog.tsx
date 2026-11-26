@@ -1,59 +1,63 @@
-'use client'
-import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription
-} from "@/components/ui/dialog"
+import React, { useState } from 'react';
 import CustomerForm from "@/components/forms/CustomerForm"
 import useCustomerStore from '@/stores/useCustomerStore';
-import { Button } from '@/components/ui/button';
-import AresResponseDisplay from '@/components/AresResponseDisplay';
+import { ContactFormDialog } from '@/components/contacts/ContactFormDialog';
+import { Customer } from '@/types/customer';
 
-const CustomerDialog: React.FC = () => {
-  const { draftCustomer, customerDialog, updateCustomerDialog, updateApiCustomer, createApiCustomer, fetchCustomers, aresResponse, clearAresResponse } = useCustomerStore();
+interface CustomerDialogProps {
+  /** Called with the submitted customer after a successful save */
+  onSaved?: (customer: Customer) => void
+}
 
-  const getTitle = () => {
-    return draftCustomer.id ? `Edit Customer: ${draftCustomer.name} (${draftCustomer.id})` : 'Create Customer';
-  }
+const CustomerDialog: React.FC<CustomerDialogProps> = ({ onSaved }) => {
+  const { draftCustomer, customerDialog, updateCustomerDialog, updateApiCustomer, createApiCustomer, fetchCustomers, clearAresResponse } = useCustomerStore();
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const isEdit = !!draftCustomer.id
+
   const handleSubmitForm = async () => {
-    if (draftCustomer?.id) {
-      await updateApiCustomer(draftCustomer.id, draftCustomer)
-    } else {
-      await createApiCustomer(draftCustomer)
+    const submitted = draftCustomer
+    setPending(true)
+    setError(null)
+    try {
+      if (draftCustomer?.id) {
+        await updateApiCustomer(draftCustomer.id, draftCustomer)
+      } else {
+        await createApiCustomer(draftCustomer)
+      }
+      await fetchCustomers()
+      clearAresResponse()
+      updateCustomerDialog(false)
+      onSaved?.(submitted)
+    } catch {
+      setError(`Couldn’t ${isEdit ? 'save' : 'create'} the customer. Check that all required fields are filled in and try again.`)
+    } finally {
+      setPending(false)
     }
-    await fetchCustomers()
-    clearAresResponse()
-    updateCustomerDialog(false)
   }
 
   const handleCloseDialog = () => {
+    setError(null)
     clearAresResponse()
     updateCustomerDialog(false)
   }
 
   return (
-    <Dialog
+    <ContactFormDialog
       open={customerDialog}
-      onOpenChange={handleCloseDialog}
+      onClose={handleCloseDialog}
+      title={isEdit ? 'Edit customer' : 'New customer'}
+      description={isEdit
+        ? <>Update the details of <span className="font-medium text-foreground">{draftCustomer.name || 'this customer'}</span>.</>
+        : 'Look the company up in ARES, or fill in the details manually.'}
+      submitLabel={isEdit ? 'Save changes' : 'Create customer'}
+      pending={pending}
+      error={error}
+      onSubmit={handleSubmitForm}
     >
-      <DialogContent className="w-full max-w-4xl">
-        <DialogHeader>
-          <DialogTitle>{getTitle()}</DialogTitle>
-          <DialogDescription>
-            Customer form dialog
-          </DialogDescription>
-        </DialogHeader>
-        {aresResponse && <AresResponseDisplay aresData={aresResponse} />}
-        <CustomerForm />
-        <DialogFooter>
-          <Button className="mt-4" size="lg" onClick={() => handleSubmitForm()}>{draftCustomer.id ? 'Update' : 'Create'}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog >
+      <CustomerForm />
+    </ContactFormDialog>
   );
 }
 

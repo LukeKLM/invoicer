@@ -1,3 +1,5 @@
+from sqlalchemy import desc
+from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import selectinload
 
@@ -35,3 +37,26 @@ class InvoiceRepository(BaseRepositoryWithUser):
             .where(self.model.id == invoice_id),
         )
         return detail.scalars().first()
+
+    async def get_invoice_numbers(self) -> list[str]:
+        result = await self.db_session.execute(
+            self._base_query(select(self.model.invoice_number)),
+        )
+        return list(result.scalars().all())
+
+    async def exists_with_number(self, invoice_number: str) -> bool:
+        result = await self.db_session.execute(
+            self._base_query(select(self.model.id))
+            .where(self.model.invoice_number == invoice_number)
+            .limit(1),
+        )
+        return result.scalar() is not None
+
+    async def get_latest_for_customer(self, customer_id: int):
+        result = await self.db_session.execute(
+            self._base_query(select(self.model))
+            .where(self.model.customer_id == customer_id)
+            .order_by(desc(self.model.expose_date), desc(self.model.id))
+            .limit(1),
+        )
+        return result.scalars().first()

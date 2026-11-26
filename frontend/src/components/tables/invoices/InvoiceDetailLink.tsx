@@ -1,6 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Invoice } from "@/types/invoice";
-import { useNavigate } from "react-router-dom";
 import useInvoiceStore from "@/stores/useInvoiceStore";
 
 
@@ -11,20 +11,15 @@ interface InvoiceDetailLinkProps {
 const InvoiceDetailLink: React.FC<InvoiceDetailLinkProps> = ({ invoice }) => {
 
   const { setDetail } = useInvoiceStore();
-  const navigate = useNavigate();
-
-  const handleClickDetail = () => {
-    setDetail(invoice)
-    navigate(`/invoices/${invoice.id}`)
-  }
 
   return (
-    <div
-      className="cursor-pointer hover:text-blue-500"
-      onClick={() => handleClickDetail()}
+    <Link
+      to={`/invoices/${invoice.id}`}
+      onClick={() => setDetail(invoice)}
+      className="rounded font-mono text-sm font-medium text-foreground underline-offset-4 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {invoice.invoiceNumber}
-    </div>
+    </Link>
   );
 };
 

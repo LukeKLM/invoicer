@@ -1,73 +1,53 @@
 import React from 'react'
+import { Check } from 'lucide-react'
 import { AresCompany } from '@/types/aresCompany'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
+import { ContactAvatar } from '@/components/contacts/ContactAvatar'
 
 interface AresResponseDisplayProps {
   aresData: AresCompany
 }
 
 const AresResponseDisplay: React.FC<AresResponseDisplayProps> = ({ aresData }) => {
+  const residence = aresData.residence
+  const street = residence
+    ? `${residence.street} ${residence.houseNumber}${residence.referenceNumber ? `/${residence.referenceNumber}` : ''}`.trim()
+    : ''
+  const fullAddress = residence?.fullAddress || [street, residence?.zipCode, residence?.city].filter(Boolean).join(', ')
+
+  const fields: { label: string, value?: string | number, mono?: boolean }[] = [
+    { label: 'IČO', value: aresData.ico, mono: true },
+    { label: 'DIČ', value: aresData.dic, mono: true },
+    { label: 'City', value: residence?.city },
+    { label: 'Country', value: residence?.state },
+  ]
+
   return (
-    <Card className="mb-4">
-      <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
-          <span>ARES Data</span>
-          <Badge variant="secondary">Auto-filled</Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h4 className="font-semibold text-sm text-gray-600 mb-2">Company Information</h4>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="text-sm font-medium">Name:</span>
-                <span className="text-sm">{aresData.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm font-medium">ICO:</span>
-                <span className="text-sm">{aresData.ico}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm font-medium">DIC:</span>
-                <span className="text-sm">{aresData.dic}</span>
-              </div>
-            </div>
+    <div className="mt-3 rounded-lg border bg-card p-3 shadow-xs">
+      <div className="flex items-start gap-3">
+        <ContactAvatar name={aresData.name} />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <p className="truncate text-sm font-medium text-foreground">{aresData.name}</p>
+            <Badge variant="success">
+              <Check />
+              Applied to form
+            </Badge>
           </div>
-          
-          <div>
-            <h4 className="font-semibold text-sm text-gray-600 mb-2">Address Information</h4>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="text-sm font-medium">Street:</span>
-                <span className="text-sm">{aresData.residence.street} {aresData.residence.houseNumber}{aresData.residence.referenceNumber ? `/${aresData.residence.referenceNumber}` : ''}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm font-medium">City:</span>
-                <span className="text-sm">{aresData.residence.city}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm font-medium">Postal Code:</span>
-                <span className="text-sm">{aresData.residence.zipCode}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm font-medium">Country:</span>
-                <span className="text-sm">{aresData.residence.state}</span>
-              </div>
-            </div>
+          {fullAddress && <p className="mt-0.5 text-xs text-muted-foreground">{fullAddress}</p>}
+        </div>
+      </div>
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 border-t pt-3 sm:grid-cols-4">
+        {fields.map((field) => (
+          <div key={field.label} className="min-w-0">
+            <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{field.label}</dt>
+            <dd className={field.mono ? 'truncate font-mono text-xs text-foreground' : 'truncate text-sm text-foreground'}>
+              {field.value || <span className="text-muted-foreground/60">—</span>}
+            </dd>
           </div>
-        </div>
-        
-        <Separator className="my-3" />
-        
-        <div>
-          <h4 className="font-semibold text-sm text-gray-600 mb-2">Full Address</h4>
-          <p className="text-sm bg-gray-50 p-2 rounded">{aresData.residence.fullAddress}</p>
-        </div>
-      </CardContent>
-    </Card>
+        ))}
+      </dl>
+    </div>
   )
 }
 

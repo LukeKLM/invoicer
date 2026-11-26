@@ -1,28 +1,45 @@
 import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Plus } from "lucide-react";
 import InvoicesTable from "@/components/tables/InvoicesTable";
 import InvoiceDialog from "@/components/dialogs/InvoiceDialog";
-import { useLayout } from "@/contexts/LayoutContext";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import useInvoiceStore from "@/stores/useInvoiceStore";
 
 const InvoicesPage: React.FC = () => {
   const { updateInvoiceDialog, resetDraft } = useInvoiceStore();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const handleCreateInvoice = () => {
     resetDraft()
     updateInvoiceDialog(true)
   }
-  const { setHeaderContent } = useLayout();
+
+  // "/invoices?new=1" (e.g. from the dashboard) opens the create dialog straight away
   useEffect(() => {
-    setHeaderContent(<Button onClick={handleCreateInvoice}>Create Invoice</Button>)
-    return () => setHeaderContent(null)
-  }, [])
+    if (searchParams.get("new") !== "1") return
+    resetDraft()
+    updateInvoiceDialog(true)
+    setSearchParams({}, { replace: true })
+  }, [searchParams, setSearchParams, resetDraft, updateInvoiceDialog])
 
   return (
-    <div className="mt-6">
+    <>
+      <PageHeader
+        title="Invoices"
+        description="Create, track and download the invoices you've issued."
+        actions={
+          <Button onClick={handleCreateInvoice}>
+            <Plus />
+            New invoice
+          </Button>
+        }
+      />
       <InvoiceDialog />
-      <InvoicesTable />
-    </div>
+      <InvoicesTable onCreate={handleCreateInvoice} />
+    </>
   );
 }
 
