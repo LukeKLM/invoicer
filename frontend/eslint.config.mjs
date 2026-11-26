@@ -54,6 +54,8 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      // TypeScript already reports undefined identifiers; the rule only misfires on DOM/TS globals
+      'no-undef': 'off',
     },
     settings: {
       react: {

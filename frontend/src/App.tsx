@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { LayoutProvider } from './contexts/LayoutContext'
-import { MainMenu } from './components/MainMenu'
+import { AppShell } from './components/layout/AppShell'
 import ProtectedRoute from './components/ProtectedRoute'
 
 // Auth pages
@@ -18,20 +18,19 @@ import CustomersPage from './pages/CustomersPage'
 import CustomerDetailPage from './pages/CustomerDetailPage'
 import SuppliersPage from './pages/SuppliersPage'
 import SupplierDetailPage from './pages/SupplierDetailPage'
+import SkipPayCalculatorPage from './pages/SkipPayCalculatorPage'
+import SettingsPage from './pages/SettingsPage'
 
 // Auth wrapper component
 const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div>{children}</div>
+  return <div className="min-h-dvh bg-background">{children}</div>
 }
 
-// Protected layout with MainMenu
+// Protected layout with the app shell (sidebar + top bar)
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <LayoutProvider>
-      <MainMenu />
-      <div className="container mx-auto max-w-6xl px-4 md:px-6">
-        {children}
-      </div>
+      <AppShell>{children}</AppShell>
     </LayoutProvider>
   )
 }
@@ -108,6 +107,20 @@ function App() {
         <ProtectedRoute>
           <ProtectedLayout>
             <SupplierDetailPage />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/calculator" element={
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <SkipPayCalculatorPage />
+          </ProtectedLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/settings" element={
+        <ProtectedRoute>
+          <ProtectedLayout>
+            <SettingsPage />
           </ProtectedLayout>
         </ProtectedRoute>
       } />

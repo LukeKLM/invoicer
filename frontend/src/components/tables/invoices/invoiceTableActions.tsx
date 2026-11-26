@@ -1,5 +1,5 @@
-
-import { MoreHorizontal } from "lucide-react"
+import { useState } from "react"
+import { Copy, Download, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 
 import {
   downloadInvoice,
@@ -9,12 +9,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import useInvoiceStore from "@/stores/useInvoiceStore";
 import { Invoice } from "@/types/invoice";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface TableActionsProps {
   invoice: Invoice
@@ -23,10 +23,11 @@ interface TableActionsProps {
 
 export const InvoiceTableActions: React.FC<TableActionsProps> = ({ invoice }) => {
   const { fetchInvoices, setDraft, updateInvoiceDialog, deleteApiInvoice } = useInvoiceStore();
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const openModal = () => {
     // workaround to dropdown do not interfere with modal
-    setTimeout(() => updateInvoiceDialog(true), 100);
+    window.setTimeout(() => updateInvoiceDialog(true), 100);
   }
 
   const handleDeleteInvoice = async (invoice_id: number) => {
@@ -56,37 +57,46 @@ export const InvoiceTableActions: React.FC<TableActionsProps> = ({ invoice }) =>
 
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => handleCopyInvoice(invoice)}
-        >
-          Copy
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => handleEditInvoice(invoice)}
-        >
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => handleDownlaodInvoice(invoice.id as number)}
-        >
-          Download
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => handleDeleteInvoice(invoice.id as number)}
-        >
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon-sm" aria-label={`Actions for invoice ${invoice.invoiceNumber}`}>
+            <MoreHorizontal />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-44">
+          <DropdownMenuItem onClick={() => handleEditInvoice(invoice)}>
+            <Pencil />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleCopyInvoice(invoice)}>
+            <Copy />
+            Duplicate
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleDownlaodInvoice(invoice.id as number)}>
+            <Download />
+            Download PDF
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+            // workaround to dropdown do not interfere with modal
+            onClick={() => window.setTimeout(() => setConfirmDelete(true), 100)}
+          >
+            <Trash2 />
+            Delete…
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDialog
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
+        title={`Delete invoice ${invoice.invoiceNumber}?`}
+        description={<>This permanently removes the invoice{invoice.customer?.name ? ` for ${invoice.customer.name}` : ""} and all of its items. This can&apos;t be undone.</>}
+        confirmLabel="Delete invoice"
+        onConfirm={() => handleDeleteInvoice(invoice.id as number)}
+        errorMessage={(e) => `Deleting failed: ${(e as Error).message}`}
+      />
+    </div>
   )
 }

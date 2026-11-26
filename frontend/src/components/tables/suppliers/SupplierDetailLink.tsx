@@ -2,6 +2,7 @@ import React from "react";
 import { Supplier } from "@/types/supplier";
 import { useNavigate } from "react-router-dom";
 import useSupplierStore from "@/stores/useSupplierStore";
+import { ContactNameCell } from "@/components/contacts/ContactNameCell";
 
 
 interface SupplierDetailLinkProps {
@@ -19,12 +20,11 @@ const SupplierDetailLink: React.FC<SupplierDetailLinkProps> = ({ supplier }) => 
   }
 
   return (
-    <div
-      className="cursor-pointer hover:text-blue-500"
-      onClick={() => handleClickDetail()}
-    >
-      {supplier.name}
-    </div>
+    <ContactNameCell
+      name={supplier.name}
+      secondary={supplier.email}
+      onOpen={handleClickDetail}
+    />
   );
 };
 

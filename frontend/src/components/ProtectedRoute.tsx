@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
-import Cookies from 'js-cookie'
+import { clearAccessToken, getAccessToken, getTokenExpiration, hasValidAccessToken, logoutAndRedirect } from '@/lib/auth'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -8,13 +8,22 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const location = useLocation()
-  const accessToken = Cookies.get('access_token')
+  const isAuthenticated = hasValidAccessToken()
 
+  // log out the moment the token expires, even when the user just keeps the page open
   useEffect(() => {
-    console.log('Access token:', accessToken)
-  }, [accessToken])
+    const token = getAccessToken()
+    const expiration = token && getTokenExpiration(token)
+    if (!expiration) return
 
-  if (!accessToken) {
+    // setTimeout overflows above ~24.8 days, the route re-checks the token on navigation anyway
+    const delay = Math.min(Math.max(expiration.getTime() - Date.now(), 0), 2 ** 31 - 1)
+    const timeout = window.setTimeout(logoutAndRedirect, delay)
+    return () => window.clearTimeout(timeout)
+  }, [isAuthenticated])
+
+  if (!isAuthenticated) {
+    clearAccessToken()
     // Redirect to login while preserving the intended destination
     return <Navigate to="/login" state={{ from: location }} replace />
   }

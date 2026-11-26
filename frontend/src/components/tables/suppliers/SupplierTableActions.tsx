@@ -1,17 +1,7 @@
-
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { useNavigate } from "react-router-dom";
 import useSupplierStore from "@/stores/useSupplierStore";
 import { Supplier } from "@/types/supplier";
+import { ContactRowActions } from "@/components/contacts/ContactRowActions";
 
 interface TableActionsProps {
   supplier: Supplier
@@ -19,11 +9,12 @@ interface TableActionsProps {
 
 
 export const SupplierTableActions: React.FC<TableActionsProps> = ({ supplier }) => {
-  const { fetchSuppliers, updateSupplierDialog, deleteApiSupplier, setDraft } = useSupplierStore();
+  const { fetchSuppliers, updateSupplierDialog, deleteApiSupplier, setDraft, setDetail } = useSupplierStore();
+  const navigate = useNavigate();
 
   const openModal = () => {
     // workaround to dropdown do not interfere with modal
-    setTimeout(() => updateSupplierDialog(true), 100);
+    window.setTimeout(() => updateSupplierDialog(true), 100);
   }
 
   const handleDeleteSupplier = async (supplier_id: number) => {
@@ -38,29 +29,18 @@ export const SupplierTableActions: React.FC<TableActionsProps> = ({ supplier }) 
     openModal();
   };
 
+  const handleViewSupplier = () => {
+    setDetail(supplier)
+    navigate(`/suppliers/${supplier.id}`)
+  }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => handleEditSupplier(supplier)}
-        >
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => handleDeleteSupplier(supplier.id as number)}
-        >
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <ContactRowActions
+      entityLabel="supplier"
+      name={supplier.name}
+      onView={handleViewSupplier}
+      onEdit={() => handleEditSupplier(supplier)}
+      onDelete={() => handleDeleteSupplier(supplier.id as number)}
+    />
   )
 }

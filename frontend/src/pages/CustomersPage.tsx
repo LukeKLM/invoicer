@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { Plus } from "lucide-react";
 import CustomerTable from "@/components/tables/CustomerTable";
 import CustomerDialog from "@/components/dialogs/CustomerDialog";
 import useCustomerStore from "@/stores/useCustomerStore";
 import { Button } from "@/components/ui/button";
-import { useLayout } from "@/contexts/LayoutContext";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 const CustomersPage: React.FC = () => {
   const { updateCustomerDialog, resetDraft } = useCustomerStore();
@@ -12,18 +13,22 @@ const CustomersPage: React.FC = () => {
     resetDraft()
     updateCustomerDialog(true)
   }
-  const { setHeaderContent } = useLayout();
-
-  useEffect(() => {
-    setHeaderContent(<Button onClick={handleCreateCustomer}>Create Customer</Button>)
-    return () => setHeaderContent(null)
-  }, [])
 
   return (
-    <div className="mt-6">
+    <>
+      <PageHeader
+        title="Customers"
+        description="Companies you invoice. Add one by IČO to fill in its details from ARES."
+        actions={
+          <Button onClick={handleCreateCustomer}>
+            <Plus />
+            New customer
+          </Button>
+        }
+      />
       <CustomerDialog />
-      <CustomerTable />
-    </div>
+      <CustomerTable onCreate={handleCreateCustomer} />
+    </>
   );
 }
 
